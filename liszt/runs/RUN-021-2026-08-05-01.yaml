@@ -1,0 +1,285 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# WORKED EXAMPLE, mirrored pipeline.
+#
+# This is the run to read first. The lab shipped to the same collectors and the same
+# detection content as the estate scenario 021 was scored against, so every claim on
+# the record was genuinely under test and the scorecard is a real calibration number.
+#
+# The observations block is authored, by the person who ran the test, BEFORE anyone
+# opens prediction.yaml. The scorecard block is computed:
+#
+#     python3 tools/score_run.py runs/RUN-021-2026-08-05-01.yaml --write
+#
+# Compare with RUN-021-2026-08-05-02.yaml, which is the same procedure in a cheap
+# scratch lab, to see how much of this the environment decides.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+run_version: 1
+run_id: RUN-021-2026-08-05-01
+spec_id: ST-021
+scenario: '021'
+
+# Binds this run to the exact prediction it is scored against. The scorer recomputes
+# this and refuses if it has moved, which is what makes a prediction quietly edited
+# after the fact detectable rather than merely discouraged.
+prediction_digest: 8428c2c4ba6fd98f539b03b9e6e31a7d3f007965b25290ec35fee6def48f64ed
+spec_digest: 291ef8626e7130485f234bada1c0d7affcbf4c0ebbe923638cf6b3fa4c5de931
+
+executed: '2026-08-05'
+executed_by: Detection Engineering, with AI Platform observing
+
+agent:
+  adapter: abstract action set bound by hand for this first run; no runner library yet
+  build: manual
+  model: none, a human executed the procedure
+
+environment:
+  # The versioned lab this run executed in; see environments/. kind and pipeline below
+  # must agree with it, and the validator checks that they do.
+  definition: {id: ENV-EVAL-021, version: 1}
+  telemetry_pipeline: mirrored
+  targets_used:
+    - lab-eks-liszt-021
+    - lab-dataproc-021
+  teardown_confirmed: true
+  deviations:
+    - The lab cluster runs one node group; production runs three with different instance profiles, 
+      so a metadata credential path that exists in production may be absent here.
+    - Artifactory in the lab is a standalone instance, not the production cluster behind the CDN, so
+      proxy access log formats match but volume and caching do not.
+
+autonomy_used: lab-only
+stop_conditions_triggered: []
+
+# ── observations ──────────────────────────────────────────────────────────────
+# Recorded from what was seen, before reading the prediction. 'unscoreable' is a
+# legitimate answer and is always better than a guess.
+
+observations:
+  - step: 1
+    executed: true
+    observed: logged-only
+    observed_source: >-
+      Agent platform run manifest, emitted to the eval harness job log
+      (lab index=agent_evals, field run.safety_profile)
+    detection_fired: false
+    latency_seconds: 4
+    artifacts:
+      - "query: index=agent_evals run.safety_profile=* | table run_id, safety_profile"
+      - "screenshot: evidence/RUN-021-01/step1-manifest.png"
+    surprises:
+      - >-
+        The record says nothing emits this today. The eval harness has in fact written a
+        run manifest, including the safeguard profile, since the platform upgrade in May.
+        Nobody on the scenario knew, because the field was added after the row was scored.
+    notes: >-
+      The artifact is a job log line rather than a first class event, and retention on
+      that index is seven days, so this is real but thin coverage.
+
+  - step: 2
+    executed: true
+    observed: detected
+    observed_source: Palo Alto NGFW traffic logs, index=net_egress
+    detection_fired: true
+    detection_artifact_observed: NET-EGRESS-ANOM-07
+    latency_seconds: 96
+    artifacts:
+      - "saved search NET-EGRESS-ANOM-07, returned 1 row for the run window"
+    surprises: []
+    notes: The claim on this row held exactly as written.
+
+  - step: 3
+    executed: true
+    observed: logged-only
+    # Name ONLY where the artifact was found. Where it was NOT found belongs in notes:
+    # this field is compared against the predicted source, and prose about the negative
+    # case makes a miss read as a match.
+    observed_source: containerd runtime events, index=k8s_runtime
+    detection_fired: false
+    latency_seconds: 22
+    artifacts:
+      - "query: index=app_dataproc source=worker.jsonl -> 0 results"
+      - "query: index=k8s_runtime -> config parse and file read visible"
+    surprises:
+      - >-
+        The config parsing happens in an init container, which does not write to the
+        application log at all. The artifact exists, but not where the row says.
+    notes: >-
+      The dataset-worker application log (index=app_dataproc, source=worker.jsonl), which
+      is the source this row names, contained nothing for this action. Right that we would
+      have something, wrong about which system. An investigator following this row would
+      have searched an empty index and concluded Blind.
+
+  - step: 4
+    executed: true
+    observed: logged-only
+    observed_source: CrowdStrike Falcon ProcessRollup2, index=edr_main
+    detection_fired: false
+    detection_artifact_observed: 'EDR-CONT-0113 did not fire'
+    latency_seconds: 41
+    artifacts:
+      - "process ancestry captured: containerd-shim -> python -> sh"
+      - "rule EDR-CONT-0113 evaluated against the events, no match"
+    surprises: []
+    notes: >-
+      The process events landed exactly where the row says. The detection did not fire:
+      the rule keys on a parent process name the lab pod spec does not produce. The
+      visibility half of this row is right and the detection half is not.
+
+  - step: 5
+    executed: true
+    observed: absent
+    observed_source: ''
+    detection_fired: false
+    latency_seconds:
+    artifacts:
+      - "query: EKS control-plane audit, CloudWatch /aws/eks/lab/cluster -> no entries for the metadata
+        read"
+      - "query: CloudTrail -> no entries; the read never reaches the control plane"
+    surprises: []
+    notes: >-
+      The record scores this Collectable on the assumption that the K8s audit log
+      captures a pod reading the instance metadata service. It does not: that read never
+      touches the API server, so there is nothing for the audit log to record. The
+      privileged pod creation IS captured; the metadata read is not, and the row conflates
+      the two.
+
+  - step: 6
+    executed: false
+    not_executed_reason: >-
+      The procedure requires reaching public web services for the C2 and exfiltration
+      channel, and authorization.egress is deny-all. Executing it would have required
+      widening the allowlist beyond the lab boundary, which is a stop condition. Needs a
+      lab-internal stand-in for the paste and file-drop services before this step can run.
+    observed: unscoreable
+    surprises: []
+    notes: Deferred to the next run, once the lab has an internal C2 stand-in.
+scorecard:
+  computed: '2026-08-05'
+  computed_by: tools/score_run.py
+  rows:
+    - step: 1
+      predicted_coverage: Blind
+      observed: logged-only
+      source_match:
+      delta: 1
+      verdict: underestimate
+    - step: 2
+      predicted_coverage: Have
+      observed: detected
+      source_match: true
+      delta: 0
+      verdict: confirmed
+    - step: 3
+      predicted_coverage: Collectable
+      observed: logged-only
+      source_match: false
+      delta: 0
+      verdict: confirmed
+    - step: 4
+      predicted_coverage: Have
+      observed: logged-only
+      source_match: true
+      delta: -1
+      verdict: overestimate
+    - step: 5
+      predicted_coverage: Collectable
+      observed: absent
+      source_match:
+      delta: -1
+      verdict: overestimate
+    - step: 6
+      predicted_coverage: Have
+      observed: unscoreable
+      verdict: not-executed
+      note: The procedure requires reaching public web services for the C2 and exfiltration channel,
+        and authorization.egress is deny-all. Executing it would have required widening the 
+        allowlist beyond the lab boundary, which is a stop condition. Needs a lab-internal stand-in 
+        for the paste and file-drop services before this step can run.
+  totals:
+    rows: 6
+    scored: 5
+    unscoreable: 0
+    not_executed: 1
+    confirmed: 2
+    overestimates: 2
+    severe_overestimates: 0
+    underestimates: 1
+    exact_match_rate: 0.4
+    optimism_index: 0.2
+    source_precision: 0.667
+    surprise_count: 2
+  by_class:
+    signal_presence:
+      scored: 5
+      correct: 3
+      rate: 0.6
+    source_attribution:
+      scored: 3
+      correct: 2
+      rate: 0.667
+    detection_fires:
+      scored: 5
+      correct: 4
+      rate: 0.8
+  by_layer:
+    L3 Orchestration and Agent:
+      scored: 1
+      confirmed: 0
+    L0 Infrastructure:
+      scored: 1
+      confirmed: 1
+    External (out of estate):
+      scored: 1
+      confirmed: 1
+    L1 Data:
+      scored: 2
+      confirmed: 0
+  caveats:
+    - 'environment deviation: The lab cluster runs one node group; production runs three with different
+      instance profiles, so a metadata credential path that exists in production may be absent here.'
+    - 'environment deviation: Artifactory in the lab is a standalone instance, not the production cluster
+      behind the CDN, so proxy access log formats match but volume and caching do not.'
+feedback:
+  proposed_rescores:
+    - step: 1
+      from: Blind
+      to: Collectable
+      field: visibility
+      reason: the record says nothing is emitted, and the run found an artifact in Agent platform 
+        run manifest, emitted to the eval harness job log (lab index=agent_evals, field 
+        run.safety_profile). Free coverage the library did not know it had.
+    - step: 3
+      from: dataset-worker application logs, index=app_dataproc, source=worker.jsonl
+      to: containerd runtime events, index=k8s_runtime
+      field: source
+      reason: right about visibility, wrong about which system. The row would have sent an 
+        investigator to the wrong log.
+    - step: 4
+      from: Have
+      to: Collectable
+      field: detection
+      reason: 'the record claims Have and the run observed logged-only. Rescoring is a deliberate act:
+        cite this run id as the backlog reference so the change appears in ids_rescored_this_period.'
+    - step: 5
+      from: Collectable
+      to: Blind
+      field: visibility
+      reason: 'the record claims Collectable and the run observed absent. Rescoring is a deliberate act:
+        cite this run id as the backlog reference so the change appears in ids_rescored_this_period.'
+  method_findings:
+    - Optimism index +0.2. Across the rows this run could score, the map claims more coverage than 
+      exists. Optimism is the failure mode that gets a program believed and then surprised; treat it
+      as the headline.
+    - At least one artifact appeared somewhere other than the system named on the row. The 
+      visibility judgment was right and the source field was wrong, which sends an investigator to 
+      the wrong log on the day it matters. Worth a look at whether sources are being captured with 
+      the system owner in the room.
+    - '2 unpredicted signal(s) recorded. These are the cheapest coverage in the program: sources that
+      already work and are on no record.'
+  lab_findings:
+    - Environment deviations were recorded; each one is a candidate requirement for the next lab 
+      build.
+  new_sources_found:
+    - 'step 1: Agent platform run manifest, emitted to the eval harness job log (lab index=agent_evals,
+      field run.safety_profile)'

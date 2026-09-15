@@ -1,0 +1,496 @@
+openapi: 3.1.0
+info:
+  title: Liszt API
+  version: 1.0.0
+  description: |
+    The contract the front end and the back end both build to. Reads return exactly what
+    the current build puts in liszt-data.json; the file under examples/viewer/ is the
+    response example for the read side. Writes are change sets: who, why, what, applied by
+    the server under the validator's rules. The server recomputes every derived value.
+    Nothing is applied partially. Request bodies reuse the JSON Schemas under ../schema/.
+servers:
+  - url: /api/v1
+tags:
+  - { name: read, description: The read model }
+  - { name: write, description: Change sets }
+  - { name: testing, description: Specs, predictions, runs, scorecards, rescores }
+  - { name: admin, description: Reference data }
+
+paths:
+  /library:
+    get:
+      tags: [read]
+      summary: The view header and library counts
+      parameters: [ { $ref: '#/components/parameters/org' }, { $ref: '#/components/parameters/shape' }, { $ref: '#/components/parameters/drafts' } ]
+      responses:
+        '200':
+          description: view, baseline, library
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data_version, view, baseline, library]
+                properties:
+                  data_version: { type: integer, const: 1 }
+                  view: { $ref: '#/components/schemas/View' }
+                  baseline: { $ref: '#/components/schemas/Baseline' }
+                  library: { $ref: '#/components/schemas/LibraryCounts' }
+  /scenarios:
+    get:
+      tags: [read]
+      summary: Every scenario in the view, with computed fields
+      parameters: [ { $ref: '#/components/parameters/org' }, { $ref: '#/components/parameters/shape' }, { $ref: '#/components/parameters/drafts' } ]
+      responses:
+        '200':
+          description: scenarios[]
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/ScenarioView' } }
+    post:
+      tags: [write]
+      summary: Create a draft scenario (from intake, or a five field proposal)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Envelope'
+                - type: object
+                  required: [record]
+                  properties:
+                    record:
+                      description: A draft scenario without id, or the five field proposal
+                      oneOf:
+                        - $ref: '../schema/scenario.schema.json'
+                        - $ref: '#/components/schemas/ScenarioProposal'
+      responses:
+        '201': { $ref: '#/components/responses/Applied' }
+        '422': { $ref: '#/components/responses/Refused' }
+  /scenarios/{id}:
+    get:
+      tags: [read]
+      summary: One scenario with the organization's assessment and computed fields
+      parameters: [ { $ref: '#/components/parameters/id' }, { $ref: '#/components/parameters/org' } ]
+      responses:
+        '200':
+          description: the scenario
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ScenarioView' }
+        '404': { description: 'no such scenario' }
+  /scenarios/{id}/changes:
+    post:
+      tags: [write]
+      summary: Apply a scenario change set (authored fields and/or one organization's assessment)
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Envelope'
+                - type: object
+                  properties:
+                    record:
+                      description: Partial scenario, authored fields only. Derived fields are refused.
+                      type: object
+                    assessment:
+                      description: One organization's assessment rows, keyed by step
+                      type: object
+                      required: [org, rows]
+                      properties:
+                        org: { type: string }
+                        rows:
+                          type: object
+                          additionalProperties: { $ref: '#/components/schemas/AssessmentRow' }
+      responses:
+        '200': { $ref: '#/components/responses/Applied' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/Refused' }
+  /scenarios/{id}/publish:
+    post:
+      tags: [write]
+      summary: Publish. Reviewer must differ from author; the strict gate must pass.
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Envelope'
+                - { type: object, required: [reviewed_by], properties: { reviewed_by: { type: string } } }
+      responses:
+        '200': { $ref: '#/components/responses/Applied' }
+        '422': { $ref: '#/components/responses/Refused' }
+  /scenarios/{id}/retire:
+    post:
+      tags: [write]
+      summary: Retire. The record stays forever.
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Envelope'
+                - { type: object, properties: { superseded_by: { type: string, pattern: '^[0-9]{3}$' } } }
+      responses:
+        '200': { $ref: '#/components/responses/Applied' }
+        '422': { $ref: '#/components/responses/Refused' }
+  /scenarios/{id}/spec:
+    get:
+      tags: [testing]
+      summary: The current test spec for the scenario
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { description: 'spec', content: { application/json: { schema: { $ref: '../schema/test-spec.schema.json' } } } }
+        '404': { description: 'no spec emitted' }
+  /scenarios/{id}/prediction:
+    get:
+      tags: [testing]
+      summary: The sealed prediction bound to the current spec
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { description: 'prediction', content: { application/json: { schema: { $ref: '../schema/prediction.schema.json' } } } }
+  /scenarios/{id}/runs:
+    get:
+      tags: [testing]
+      summary: Every run and discovery run for the scenario
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200':
+          description: runs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                    - $ref: '../schema/run-record.schema.json'
+                    - $ref: '../schema/discovery-run.schema.json'
+  /runs/{run}/scorecard:
+    get:
+      tags: [testing]
+      summary: The scorecard for a run. Refused when the prediction digest has moved.
+      parameters: [ { $ref: '#/components/parameters/run' } ]
+      responses:
+        '200': { description: 'scorecard and feedback', content: { application/json: { schema: { $ref: '#/components/schemas/Scorecard' } } } }
+        '409': { description: "the prediction on disk no longer matches the run's digest; nothing scored" }
+  /runs/{run}/rescores/{n}/accept:
+    post:
+      tags: [testing]
+      summary: Accept one proposed rescore. The server sets backlog_ref to the run id.
+      parameters: [ { $ref: '#/components/parameters/run' }, { $ref: '#/components/parameters/n' } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/Envelope' } } } }
+      responses:
+        '200': { $ref: '#/components/responses/Applied' }
+        '422': { $ref: '#/components/responses/Refused' }
+  /runs/{run}/rescores/{n}/reject:
+    post:
+      tags: [testing]
+      summary: Reject one proposed rescore with a reason
+      parameters: [ { $ref: '#/components/parameters/run' }, { $ref: '#/components/parameters/n' } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/Envelope' } } } }
+      responses:
+        '200': { $ref: '#/components/responses/Applied' }
+  /runs/imports:
+    post:
+      tags: [testing]
+      summary: The agentic platform hands over one run document. One immutable run record is written; nothing else.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '../schema/agent-run-import.schema.json' }
+      responses:
+        '201':
+          description: the run record created, and in test mode its scorecard
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  run_id: { type: string }
+                  scorecard: { $ref: '#/components/schemas/Scorecard' }
+        '409': { description: 'a digest does not match disk, or the environment disagrees' }
+        '422': { $ref: '#/components/responses/Refused' }
+  /sessions:
+    post:
+      tags: [write]
+      summary: Apply a session file as one scenario change per scenario, under the facilitator's name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SessionFile' }
+      responses:
+        '200':
+          description: findings per scenario
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: { $ref: '#/components/schemas/Result' }
+  /use-cases:
+    get:
+      tags: [read]
+      summary: Every use case, as committed
+      responses:
+        '200': { description: 'use_cases[]', content: { application/json: { schema: { type: array, items: { $ref: '../schema/use-case.schema.json' } } } } }
+    post:
+      tags: [write]
+      summary: Create a proposed use case
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Envelope'
+                - { type: object, required: [record], properties: { record: { $ref: '../schema/use-case.schema.json' } } }
+      responses:
+        '201': { $ref: '#/components/responses/Applied' }
+        '422': { $ref: '#/components/responses/Refused' }
+  /use-cases/{id}/changes:
+    post:
+      tags: [write]
+      summary: Apply a use case change set
+      parameters: [ { $ref: '#/components/parameters/ucid' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Envelope'
+                - { type: object, required: [record], properties: { record: { type: object } } }
+      responses:
+        '200': { $ref: '#/components/responses/Applied' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/Refused' }
+  /incidents:
+    get:
+      tags: [read]
+      summary: Incidents by slug
+      responses:
+        '200': { description: 'incidents', content: { application/json: { schema: { type: object, additionalProperties: { $ref: '../schema/incident.schema.json' } } } } }
+  /frameworks:
+    get:
+      tags: [read]
+      summary: The baseline, the reverse index from identifier to scenarios, OWASP names, framework detail
+      responses:
+        '200':
+          description: frameworks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  baseline: { $ref: '#/components/schemas/Baseline' }
+                  frameworks: { type: object, description: 'framework key to (identifier to scenario ids)' }
+                  owasp_names: { type: object, additionalProperties: { type: string } }
+                  frameworks_detail: { type: object }
+                  baseline_meta: { type: object }
+  /frameworks/index:
+    get:
+      tags: [read]
+      summary: The identifier index for the baseline (names, revoked, deprecated, replacements)
+      responses:
+        '200': { description: 'the files under frameworks/index, keyed by table' }
+  /infrastructure:
+    get:
+      tags: [read]
+      summary: Infrastructure shapes
+      responses:
+        '200': { description: 'shapes', content: { application/json: { schema: { type: array, items: { $ref: '../schema/infrastructure-shape.schema.json' } } } } }
+  /infrastructure/{id}/changes:
+    post:
+      tags: [admin]
+      summary: Change a shape. For the catalog shape, seams and categories only.
+      parameters: [ { name: id, in: path, required: true, schema: { type: string } } ]
+      requestBody: { required: true, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/Envelope' }, { type: object, required: [record], properties: { record: { type: object } } } ] } } } }
+      responses:
+        '200': { $ref: '#/components/responses/Applied' }
+        '422': { $ref: '#/components/responses/Refused' }
+  /environments:
+    get:
+      tags: [read]
+      summary: Environment definitions, every version
+      responses:
+        '200': { description: 'environments', content: { application/json: { schema: { type: array, items: { $ref: '../schema/environment.schema.json' } } } } }
+    post:
+      tags: [admin]
+      summary: Create an environment definition or a new version of one. Old versions are never changed.
+      requestBody: { required: true, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/Envelope' }, { type: object, required: [record], properties: { record: { $ref: '../schema/environment.schema.json' } } } ] } } } }
+      responses:
+        '201': { $ref: '#/components/responses/Applied' }
+        '422': { $ref: '#/components/responses/Refused' }
+  /organizations:
+    get:
+      tags: [read]
+      summary: Organizations
+      responses:
+        '200': { description: 'organizations', content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/Organization' } } } } }
+    post:
+      tags: [admin]
+      summary: Add an organization. Never deleted; retired.
+      requestBody: { required: true, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/Envelope' }, { $ref: '#/components/schemas/Organization' } ] } } } }
+      responses:
+        '201': { $ref: '#/components/responses/Applied' }
+  /snapshots:
+    get:
+      tags: [read]
+      summary: Metrics snapshots for one organization and one shape, newest first
+      parameters: [ { $ref: '#/components/parameters/org' }, { $ref: '#/components/parameters/shape' } ]
+      responses:
+        '200': { description: 'snapshots', content: { application/json: { schema: { type: array, items: { $ref: '../schema/snapshot.schema.json' } } } } }
+  /snapshots/{id}:
+    get:
+      tags: [read]
+      summary: One snapshot
+      parameters: [ { name: id, in: path, required: true, schema: { type: string } } ]
+      responses:
+        '200': { description: 'snapshot', content: { application/json: { schema: { $ref: '../schema/snapshot.schema.json' } } } }
+
+components:
+  parameters:
+    org: { name: org, in: query, schema: { type: string, default: reference }, description: 'whose assessment' }
+    shape: { name: shape, in: query, schema: { type: string, default: SHAPE-AI }, description: 'which infrastructure shape; never blended' }
+    drafts: { name: drafts, in: query, schema: { type: boolean, default: false }, description: 'include unpublished records' }
+    id: { name: id, in: path, required: true, schema: { type: string, pattern: '^[0-9]{3}$' } }
+    ucid: { name: id, in: path, required: true, schema: { type: string, pattern: '^UC-[0-9]{3}$' } }
+    run: { name: run, in: path, required: true, schema: { type: string } }
+    n: { name: n, in: path, required: true, schema: { type: integer, minimum: 0 } }
+  responses:
+    Applied:
+      description: applied; the full recomputed record and any warnings
+      content: { application/json: { schema: { $ref: '#/components/schemas/Result' } } }
+    Refused:
+      description: not applied; findings by field. Errors block, warnings do not.
+      content: { application/json: { schema: { $ref: '#/components/schemas/Result' } } }
+    Conflict:
+      description: base_version does not match the current record; reload and reapply
+      content: { application/json: { schema: { $ref: '#/components/schemas/Result' } } }
+  schemas:
+    Envelope:
+      type: object
+      required: [reason]
+      description: Every change set carries who, why and what it was made from. author is set by the server from the signed in person.
+      properties:
+        author: { type: string, readOnly: true }
+        reason: { type: string, minLength: 3 }
+        backlog_ref: { type: string, description: 'required when a score on an already scored row changed' }
+        base_version: { type: string, description: 'the record version the change was made from' }
+    Result:
+      type: object
+      required: [applied, findings]
+      properties:
+        applied: { type: boolean }
+        version: { type: string }
+        record: { type: object }
+        findings:
+          type: array
+          items:
+            type: object
+            required: [level, where, message]
+            properties:
+              level: { enum: [error, warn] }
+              where: { type: string, description: "the validator's path, for example telemetry[2]" }
+              message: { type: string }
+    View:
+      type: object
+      required: [org, shape, includes_drafts]
+      properties:
+        org: { type: string }
+        shape: { type: string }
+        includes_drafts: { type: boolean }
+    Baseline:
+      type: object
+      properties:
+        id: { type: string }
+        attack: { type: string }
+        attack_spec: { type: string }
+        atlas: { type: string }
+        atlas_format: { type: string }
+        owasp_llm: { type: string }
+        owasp_agentic: { type: string }
+        dettect: { type: string }
+    LibraryCounts:
+      type: object
+      properties:
+        records: { type: integer }
+        published: { type: integer }
+        scored: { type: integer }
+        unscored_ids: { type: array, items: { type: string } }
+        mean_have: { type: [number, 'null'] }
+        exposed: { type: integer }
+        full_maturity: { type: integer }
+    ScenarioView:
+      description: A scenario record as committed, plus the computed fields. See liszt/docs/07-viewer-data-contract.md section 3.
+      allOf:
+        - $ref: '../schema/scenario.schema.json'
+        - type: object
+          properties:
+            version: { type: string, description: 'content digest; quote it back as base_version' }
+            counts:
+              type: object
+              properties: { Have: { type: integer }, Collectable: { type: integer }, Blind: { type: integer }, Unscored: { type: integer } }
+            metrics: { type: object, description: 'rows, scored, completeness, have, collectable, blind, quality, blind_steps, exposed, orphaned_gaps, unfunded_gaps, maturity, proposed' }
+            use_case_ids: { type: array, items: { type: string } }
+            testing: { type: object, properties: { blockers: { type: array, items: { type: string } } } }
+            discovery: { type: object, properties: { blockers: { type: array, items: { type: string } } } }
+    AssessmentRow:
+      description: One organization's answer for one evidence row. Coverage is never sent; the server derives it.
+      type: object
+      properties:
+        dettect:
+          type: [object, 'null']
+          properties:
+            visibility: { type: integer, minimum: 0, maximum: 4 }
+            detection: { type: integer, minimum: -1, maximum: 5 }
+            quality: { type: object }
+        source: { type: string, maxLength: 160 }
+        owner: { type: string }
+        evidence: { type: string }
+        backlog_ref: { type: string }
+        notes: { type: string, maxLength: 1500 }
+        research_needed: { type: boolean }
+        score_provenance: { enum: [human-session, agent-proposed] }
+    ScenarioProposal:
+      type: object
+      required: [title, mode, layer, priority]
+      properties:
+        title: { type: string }
+        mode: { enum: [attack, failure] }
+        layer: { type: string }
+        priority: { enum: [NOW, NEAR-TERM, BACKLOG] }
+        one_liner: { type: string }
+    SessionFile:
+      description: liszt/docs/07-viewer-data-contract.md section 4b
+      type: object
+      required: [session_format, recorded, facilitator, org, baseline, changes]
+      properties:
+        session_format: { type: integer, const: 1 }
+        recorded: { type: string }
+        facilitator: { type: string }
+        org: { type: string }
+        baseline: { type: string }
+        changes: { type: object }
+        new_scenarios: { type: array, items: { $ref: '#/components/schemas/ScenarioProposal' } }
+    Scorecard:
+      description: run-record.schema.json's scorecard and feedback blocks
+      type: object
+      properties:
+        scorecard: { type: object }
+        feedback: { type: object }
+    Organization:
+      type: object
+      required: [org_id, name]
+      properties:
+        org_id: { type: string, pattern: '^[a-z0-9_][a-z0-9_-]*$' }
+        name: { type: string }
+        status: { enum: [active, retired] }

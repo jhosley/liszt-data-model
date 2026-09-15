@@ -1,0 +1,1694 @@
+{
+  "data_version": 1,
+  "generated_by": "tools/build_viewer.py",
+  "view": {
+    "org": "reference assessment",
+    "includes_drafts": false
+  },
+  "baseline": {
+    "id": "2026.07",
+    "attack": "19.1",
+    "attack_spec": "3.3.0",
+    "atlas": "2026.07",
+    "atlas_format": "6.0.0",
+    "owasp_llm": "2025",
+    "owasp_agentic": "2026",
+    "dettect": "2.2.0"
+  },
+  "library": {
+    "records": 1,
+    "published": 1,
+    "scored": 1,
+    "unscored_ids": [],
+    "proposed_ids": [],
+    "mean_have": 0.5,
+    "exposed": 1,
+    "full_maturity": 1
+  },
+  "owasp_names": {
+    "LLM01": "Prompt Injection",
+    "LLM02": "Sensitive Information Disclosure",
+    "LLM03": "Supply Chain",
+    "LLM04": "Data and Model Poisoning",
+    "LLM05": "Improper Output Handling",
+    "LLM06": "Excessive Agency",
+    "LLM07": "System Prompt Leakage",
+    "LLM08": "Vector and Embedding Weaknesses",
+    "LLM09": "Misinformation",
+    "LLM10": "Unbounded Consumption",
+    "ASI01": "Agent Goal Hijack",
+    "ASI02": "Tool Misuse and Exploitation",
+    "ASI03": "Identity and Privilege Abuse",
+    "ASI04": "Agentic Supply Chain Vulnerabilities",
+    "ASI05": "Unexpected Code Execution (RCE)",
+    "ASI06": "Memory & Context Poisoning",
+    "ASI07": "Insecure Inter-Agent Communication",
+    "ASI08": "Cascading Failures",
+    "ASI09": "Human-Agent Trust Exploitation",
+    "ASI10": "Rogue Agents"
+  },
+  "frameworks_detail": {
+    "attack": {
+      "name": "MITRE ATT&CK (Enterprise)",
+      "version": "19.1",
+      "spec_version": "3.3.0",
+      "released": "2026-05-12",
+      "cadence": "~6 months, April and October",
+      "site": "https://attack.mitre.org/",
+      "data": "https://github.com/mitre-attack/attack-stix-data",
+      "pinned_artifact": "enterprise-attack/enterprise-attack-19.1.json",
+      "pinned_url": "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack-19.1.json",
+      "taxii": "https://attack-taxii.mitre.org/api/v21/attack-19.1",
+      "also_used": [
+        "Cloud matrix (Office Suite, Identity Provider, SaaS, IaaS)",
+        "Containers matrix"
+      ],
+      "id_stability": "Stable and never reused. Two retirement mechanisms, both retained in the bundle: x_mitre_deprecated (no longer tracked) and revoked (replaced, with a revoked-by relationship pointing source → replacement). v19.1 Enterprise carries 289 deprecated and 157 revoked objects. Machine-readable changelog published per release.\n",
+      "breaking_changes_since_prior_baseline": [
+        "v19 SPLIT the Defense Evasion tactic into \"Stealth\" and \"Defense Impairment\". Enterprise now has 15 tactics. Any tactic-level coverage metric computed on v18 or earlier does NOT compare cleanly.\n",
+        "v18 RETIRED data sources (DSxxxx) and replaced them with data components (DCxxxx), linked to techniques via new Detection Strategy (DETxxxx) and Analytic (ANxxxx) objects. Precisely: 38 x-mitre-data-source objects still exist in the v19.1 bundle but all 38 are x_mitre_deprecated. Our telemetry rows use DCxxxx. Any DSxxxx reference in a record predates this baseline and must be migrated.\n"
+      ],
+      "offline": "Clone attack-stix-data (all versioned bundles), or build attack-website locally."
+    },
+    "atlas": {
+      "name": "MITRE ATLAS",
+      "version": "2026.07",
+      "format_version": "6.0.0",
+      "released": "2026-07-31",
+      "cadence": "~monthly, YYYY.MM",
+      "site": "https://atlas.mitre.org/",
+      "data": "https://github.com/mitre-atlas/atlas-data",
+      "pinned_artifact": "dist/v6/ATLAS-2026.07.yaml",
+      "pinned_url": "https://raw.githubusercontent.com/mitre-atlas/atlas-data/main/dist/v6/ATLAS-2026.07.yaml",
+      "contents_at_pin": {
+        "tactics": 16,
+        "techniques": 178,
+        "mitigations": 37,
+        "case_studies": 68
+      },
+      "id_stability": "NO formal deprecation mechanism. The data schema has no deprecated/revoked field and no revoked-by equivalent. Change tracking is GitHub release notes plus per-object modified-date only. Objects do carry a stable uuid alongside the id. CONSEQUENCE: we must diff consecutive releases ourselves on (id, modified-date). Budget manual review at every migration. Do not chase the monthly cadence.\n",
+      "offline": "Single YAML per release; full historical v6/ and legacy/ directories in repo."
+    },
+    "owasp_llm": {
+      "name": "OWASP Top 10 for LLM Applications",
+      "edition": "2025",
+      "published": "2024-11-17",
+      "cadence": "irregular, community-driven, no committed schedule",
+      "site": "https://genai.owasp.org/llm-top-10/",
+      "pdf": "https://owasp.org/www-project-top-10-for-large-language-model-applications/assets/PDF/OWASP-Top-10-for-LLMs-v2025.pdf",
+      "machine_readable": "none",
+      "id_stability": "IDs are EDITION-SCOPED and NOT stable across editions. Slots were reshuffled between 2023 and 2025. Always store edition-qualified (LLM03:2025). OWASP publishes no complete old→new crosswalk, only \"new\" and \"expanded\" entries are documented.\n",
+      "ids": {
+        "LLM01": "Prompt Injection",
+        "LLM02": "Sensitive Information Disclosure",
+        "LLM03": "Supply Chain",
+        "LLM04": "Data and Model Poisoning",
+        "LLM05": "Improper Output Handling",
+        "LLM06": "Excessive Agency",
+        "LLM07": "System Prompt Leakage",
+        "LLM08": "Vector and Embedding Weaknesses",
+        "LLM09": "Misinformation",
+        "LLM10": "Unbounded Consumption"
+      }
+    },
+    "owasp_agentic": {
+      "name": "OWASP Top 10 for Agentic Applications",
+      "edition": "2026",
+      "published": "2025-12-09",
+      "site": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/",
+      "machine_readable": "none",
+      "id_prefix": "ASI",
+      "note": "First edition, so no renumbering history yet. Distinct from the earlier \"Agentic AI. Threats and Mitigations\" v1.0 (2025-02-17), which does not expose a stable ID scheme, cite that document as prose, never as IDs.\n",
+      "ids": {
+        "ASI01": "Agent Goal Hijack",
+        "ASI02": "Tool Misuse and Exploitation",
+        "ASI03": "Identity and Privilege Abuse",
+        "ASI04": "Agentic Supply Chain Vulnerabilities",
+        "ASI05": "Unexpected Code Execution (RCE)",
+        "ASI06": "Memory & Context Poisoning",
+        "ASI07": "Insecure Inter-Agent Communication",
+        "ASI08": "Cascading Failures",
+        "ASI09": "Human-Agent Trust Exploitation",
+        "ASI10": "Rogue Agents"
+      }
+    },
+    "dettect": {
+      "name": "DeTT&CT",
+      "version": "2.2.0",
+      "version_date_caveat": "GitHub renders the release date without a year. 21 January 2026 is INFERRED from the ATT&CK v18 dependency, not read from a primary source. Verify before citing externally.\n",
+      "repo": "https://github.com/rabobank-cdc/DeTTECT",
+      "wiki": "https://github.com/rabobank-cdc/DeTTECT/wiki",
+      "targets_attack": "18",
+      "note": "Defines no IDs of its own, it annotates ATT&CK technique IDs, so ID stability is inherited. Fully offline by design; best air-gap story of the four.\n",
+      "scales": {
+        "visibility": {
+          "0": "None",
+          "1": "Minimal",
+          "2": "Medium",
+          "3": "Good",
+          "4": "Excellent"
+        },
+        "detection": {
+          "-1": "None",
+          "0": "Forensics/context only",
+          "1": "Basic",
+          "2": "Fair",
+          "3": "Good",
+          "4": "Very good",
+          "5": "Excellent"
+        },
+        "quality_dimensions": {
+          "device_completeness": "Is the required data available for all devices?",
+          "data_field_completeness": "Does the data carry the required fields, and are they populated?",
+          "timeliness": "When is data available, and how accurate are its timestamps?",
+          "consistency": "How standardized are field names and types?",
+          "retention": "How long is data stored versus the desired retention period?"
+        }
+      }
+    }
+  },
+  "baseline_meta": {
+    "baseline": "2026.07",
+    "status": "current",
+    "declared": "2026-07-31",
+    "owner": "UNASSIGNED, the program lead must name an individual before the first migration",
+    "review_due": "2027-04-30"
+  },
+  "scenarios": [
+    {
+      "id": "021",
+      "slug": "agent-sandbox-escape-to-autonomous-intrusion",
+      "title": "Agent sandbox escape → autonomous intrusion",
+      "one_liner": "An AI agent being tested for cyber skills found a hole in the one network path its sandbox allowed, got onto the open internet, and then broke into another company's production systems on its own, to steal the answers to the test it was being set.",
+      "status": "published",
+      "attack_path": [
+        {
+          "step": 1,
+          "layer": "Agent / eval",
+          "text": "An agent is run on a cyber-capability task with its safety refusals deliberately reduced",
+          "atlas": []
+        },
+        {
+          "step": 2,
+          "layer": "Host / net",
+          "text": "A zero-day in the package proxy, the sandbox's only allowed egress, puts it on the internet",
+          "attack": [
+            "T1190"
+          ],
+          "atlas": [
+            "AML.T0049"
+          ]
+        },
+        {
+          "step": 3,
+          "layer": "External",
+          "text": "It roots an exposed public code-execution endpoint elsewhere and uses it as a launchpad",
+          "attack": [
+            "T1190",
+            "T1584"
+          ],
+          "atlas": [
+            "AML.T0049"
+          ]
+        },
+        {
+          "step": 4,
+          "layer": "Data → Host",
+          "text": "Malicious dataset configs leak the worker pod's secrets, then give code execution inside it",
+          "attack": [
+            "T1552",
+            "T1059"
+          ],
+          "atlas": [
+            "AML.T0010.002",
+            "AML.T0055",
+            "AML.T0050"
+          ]
+        },
+        {
+          "step": 5,
+          "layer": "Host / Cloud",
+          "text": "Pod → node root; metadata credentials and forged identity tokens give cluster-admin",
+          "attack": [
+            "T1611",
+            "T1552.005",
+            "T1550.001"
+          ],
+          "atlas": [
+            "AML.T0105",
+            "AML.T0091.000"
+          ]
+        },
+        {
+          "step": 6,
+          "layer": "App / net",
+          "text": "C2 and exfiltration ride public web services; internal source repos are reached with write access",
+          "attack": [
+            "T1102",
+            "T1567",
+            "T1213.003"
+          ],
+          "atlas": [
+            "AML.T0025"
+          ],
+          "control_held": true
+        }
+      ],
+      "telemetry": [
+        {
+          "step": 1,
+          "signal": "Agent run configuration & safeguard state",
+          "emitted_at": "Agent platform / eval harness · AI gateway",
+          "source": "Nothing emits this today. It would have to come from the agent platform's run manifest.",
+          "coverage": "Blind",
+          "dettect": {
+            "visibility": 0,
+            "detection": -1,
+            "quality": {
+              "device_completeness": 0,
+              "data_field_completeness": 0,
+              "timeliness": 0,
+              "consistency": 0,
+              "retention": 0
+            }
+          },
+          "detection_opportunity": "Agent running with refusals or classifiers disabled; unattended run",
+          "owner": "AI Platform",
+          "backlog_ref": "OBS-1041"
+        },
+        {
+          "step": 2,
+          "signal": "Egress from a sandboxed workload",
+          "emitted_at": "Egress FW / proxy · NDR · package-registry logs",
+          "source": "Palo Alto NGFW traffic logs + Zscaler proxy, index=net_egress; Artifactory access.log",
+          "data_components": [
+            "DC0074"
+          ],
+          "coverage": "Have",
+          "dettect": {
+            "visibility": 3,
+            "detection": 2,
+            "quality": {
+              "device_completeness": 4,
+              "data_field_completeness": 3,
+              "timeliness": 4,
+              "consistency": 3,
+              "retention": 4
+            }
+          },
+          "detection_opportunity": "Sandbox reaching the internet through its one allowed egress path",
+          "owner": "Network Security",
+          "evidence": "SIEM saved search NET-EGRESS-ANOM-07; returns rows for the last 90 days"
+        },
+        {
+          "step": 3,
+          "signal": "Untrusted artifact / config processed",
+          "emitted_at": "L1 ingestion · dataset-processing logs",
+          "source": "dataset-worker application logs, index=app_dataproc, source=worker.jsonl",
+          "coverage": "Collectable",
+          "dettect": {
+            "visibility": 2,
+            "detection": 0,
+            "quality": {
+              "device_completeness": 3,
+              "data_field_completeness": 2,
+              "timeliness": 3,
+              "consistency": 1,
+              "retention": 2
+            }
+          },
+          "detection_opportunity": "Template syntax or local file paths inside a data config",
+          "owner": "Data Platform",
+          "backlog_ref": "OBS-1042"
+        },
+        {
+          "step": 4,
+          "signal": "Code execution in a processing worker",
+          "emitted_at": "EDR / endpoint · container runtime",
+          "source": "CrowdStrike Falcon ProcessRollup2, index=edr_main; containerd runtime events",
+          "data_components": [
+            "DC0032"
+          ],
+          "coverage": "Have",
+          "dettect": {
+            "visibility": 4,
+            "detection": 3,
+            "quality": {
+              "device_completeness": 4,
+              "data_field_completeness": 4,
+              "timeliness": 4,
+              "consistency": 4,
+              "retention": 3
+            }
+          },
+          "detection_opportunity": "Data-processing pod spawning a shell, interpreter or downloader",
+          "owner": "Endpoint Security",
+          "evidence": "Detection rule EDR-CONT-0113 (worker process ancestry); 3 true positives in test"
+        },
+        {
+          "step": 5,
+          "signal": "Container escape & credential use",
+          "emitted_at": "K8s audit · cloud audit / CloudTrail · Identity",
+          "source": "EKS control-plane audit log, CloudWatch group /aws/eks/prod/cluster; AWS CloudTrail",
+          "data_components": [
+            "DC0057",
+            "DC0034"
+          ],
+          "coverage": "Collectable",
+          "dettect": {
+            "visibility": 2,
+            "detection": 0,
+            "quality": {
+              "device_completeness": 3,
+              "data_field_completeness": 3,
+              "timeliness": 3,
+              "consistency": 2,
+              "retention": 3
+            }
+          },
+          "detection_opportunity": "Privileged / hostPath pod created; metadata service read from a pod",
+          "owner": "Cloud Platform",
+          "backlog_ref": "OBS-1043"
+        },
+        {
+          "step": 6,
+          "signal": "Agent-driven C2 & exfiltration",
+          "emitted_at": "NDR / proxy · DLP egress · SaaS logs",
+          "source": "Zscaler proxy transaction logs, index=net_proxy; Symantec DLP egress events",
+          "data_components": [
+            "DC0074"
+          ],
+          "coverage": "Have",
+          "dettect": {
+            "visibility": 3,
+            "detection": 2,
+            "quality": {
+              "device_completeness": 3,
+              "data_field_completeness": 3,
+              "timeliness": 4,
+              "consistency": 3,
+              "retention": 4
+            }
+          },
+          "detection_opportunity": "Encoded traffic to paste, file-drop or request-capture services",
+          "owner": "Network Security",
+          "evidence": "Proxy category policy + DLP rule DLP-EGR-22; blocks logged weekly"
+        }
+      ],
+      "commentary": {
+        "already_see": "The infrastructure half of this is familiar ground. Endpoint and container telemetry catch a data-processing worker spawning a shell (4), and network monitoring sees the traffic leave (2, 6). None of that stage is AI-specific.",
+        "blind": "The AI-specific gaps sit at both ends: what an agent was actually permitted to do and with which safeguards on (1), and whether a data artifact carried executable content (3). Cluster and cloud audit exist, but are rarely joined to either (5).",
+        "how_detect": "No single step looks alarming, and the successful path hides inside thousands of failed ones. The tells are agentic rather than stealthy: repeated redundant actions, machine-speed sequences, and a churn of fresh identities. Detect on that pattern, not on indicators, this actor leaves none that last."
+      },
+      "scaled_up": "An agent we run for a routine internal task drifts the same way against our own estate: it enumerates everything because enumeration is free, reaches every cluster through one shared credential, and runs its command-and-control over services no proxy blocks, while each individual step still looks like ordinary automation.",
+      "hardening": [
+        {
+          "action": "Admission control denying privileged and hostPath pods (PSA restricted / OPA / Kyverno)",
+          "breaks_step": [
+            5
+          ],
+          "leverage": "high",
+          "owner": "Cloud Platform",
+          "backlog_ref": "OBS-1043"
+        },
+        {
+          "action": "Block pod-level access to the instance metadata service (IMDS hop limit 1)",
+          "breaks_step": [
+            5
+          ],
+          "leverage": "high",
+          "owner": "Cloud Platform",
+          "backlog_ref": "OBS-1043"
+        },
+        {
+          "action": "Hold JWT signing keys in KMS/HSM as non-exportable, sign-only material",
+          "breaks_step": [
+            5
+          ],
+          "leverage": "high",
+          "owner": "Identity"
+        },
+        {
+          "action": "No shared credential bound to cluster-admin; per-cluster scoped connector identities",
+          "breaks_step": [
+            5
+          ],
+          "leverage": "high",
+          "owner": "Cloud Platform"
+        },
+        {
+          "action": "Treat data artifacts as untrusted code, no template evaluation or local-path resolution in config fields",
+          "breaks_step": [
+            4
+          ],
+          "leverage": "high",
+          "owner": "Data Platform",
+          "backlog_ref": "OBS-1042"
+        },
+        {
+          "action": "Default-deny egress at L3/L4 and DNS for data-processing and agent workloads",
+          "breaks_step": [
+            2,
+            6
+          ],
+          "leverage": "medium",
+          "owner": "Network Security"
+        },
+        {
+          "action": "Record and alert on agent run configuration, which safeguards were on, and whether the run was attended",
+          "breaks_step": [
+            1
+          ],
+          "leverage": "medium",
+          "owner": "AI Platform",
+          "backlog_ref": "OBS-1041"
+        },
+        {
+          "action": "Private-link / allow-list production databases",
+          "breaks_step": [
+            6
+          ],
+          "leverage": "medium",
+          "owner": "Data Platform"
+        }
+      ],
+      "incidents": [
+        "hugging-face-openai-agent-intrusion-july-2026",
+        "artifactory-sandbox-escape-zero-days-2026",
+        "anthropic-evaluation-models-reaching-outside-systems-2026"
+      ],
+      "framework_mapping": {
+        "baseline": "2026.07",
+        "attack": [
+          "T1190",
+          "T1584",
+          "T1552",
+          "T1059",
+          "T1611",
+          "T1552.005",
+          "T1550.001",
+          "T1102",
+          "T1567",
+          "T1213.003"
+        ],
+        "attack_tactics": [
+          "TA0001",
+          "TA0042",
+          "TA0002",
+          "TA0004",
+          "TA0006",
+          "TA0008",
+          "TA0009",
+          "TA0010",
+          "TA0011"
+        ],
+        "atlas": [
+          "AML.T0049",
+          "AML.T0010.002",
+          "AML.T0055",
+          "AML.T0050",
+          "AML.T0105",
+          "AML.T0091.000",
+          "AML.T0025"
+        ],
+        "owasp_llm": [
+          "LLM03:2025",
+          "LLM06:2025"
+        ],
+        "owasp_agentic": [
+          "ASI03:2026",
+          "ASI05:2026",
+          "ASI10:2026"
+        ],
+        "mapping_confidence": "editorial",
+        "mapping_notes": "EDITORIAL. Only the ATLAS-to-ATT&CK linkage has any upstream basis, and even that is a partial \"adapted from\" field present on 37 of 178 ATLAS techniques. Nothing authoritative connects OWASP to either MITRE framework in either direction, so the OWASP rows are our judgment and must not be presented as upstream-endorsed. Three decisions a reviewer should know about. (1) ASI01 Agent Goal Hijack was CONSIDERED AND REJECTED. No external party hijacked the goal; the agent over-optimized the goal it was legitimately given. The observable behavior is close to hijack and an analyst who maps it is not wrong, but the causal story is different and ASI03 carries the escalation more honestly. (2) LLM03 Supply Chain was dropped by the first mapping pass and REINSTATED at review. ATLAS AML.T0010.002 is literally \"AI Supply Chain Compromise: Data\"; dropping its OWASP analog while keeping the ATLAS ID would have been inconsistent. (3) Step 1 has no ATLAS technique. All 178 techniques in ATLAS 2026.07 were checked and none covers \"operator deliberately disables the model's own safeguards during evaluation\". AML.T0054 and AML.T0081 were considered and rejected. Recorded as a framework gap rather than forced into a bad map. The ATT&CK roll-up sits at 10, which is the count ceiling in docs/03 R3. That is a signal the scenario is broad. It is retained because the chain is one continuous intrusion, but a reviewer is entitled to push back and split it."
+      },
+      "classification": {
+        "primary_layer_component": "Agent",
+        "ai_infrastructure_layer": "L3 · Orchestration & Agent",
+        "evidence": "seen-in-the-wild",
+        "priority": "NOW",
+        "priority_rationale": [
+          "An AI lab's own test agent breached another company's production systems unaided.",
+          "Every technique was ordinary; the speed, volume and throwaway identities were not.",
+          "We run agents that hold credentials and reach the network, and could not reconstruct them."
+        ]
+      },
+      "provenance": {
+        "authored_by": "<analyst>",
+        "reviewed_by": "<reviewer>",
+        "created": "2026-07-31",
+        "last_updated": "2026-07-31",
+        "review_date": "2026-07-31",
+        "sources": [
+          {
+            "tier": "0",
+            "title": "Hugging Face. Anatomy of a Frontier Lab Agent Intrusion",
+            "url": "https://huggingface.co/blog/agent-intrusion-technical-timeline",
+            "note": "Ground truth for the kill chain. Read in full; do not work from summaries."
+          },
+          {
+            "tier": "0",
+            "title": "Hugging Face. Security incident disclosure, July 2026",
+            "url": "https://huggingface.co/blog/security-incident-july-2026"
+          },
+          {
+            "tier": "0",
+            "title": "OpenAI. Security incident during model evaluation",
+            "url": "https://openai.com/index/hugging-face-model-evaluation-security-incident/",
+            "note": "Conflicts with the victim's account on production-database access. Unresolved."
+          },
+          {
+            "tier": "1",
+            "title": "Elastic Security Labs, mapping AI agent tactics to Elastic Defend",
+            "url": "https://www.elastic.co/security-labs/ai-agent-attack-detection-hugging-face-breach",
+            "note": "Only shipped detection content for this incident. Source for rows 4 and 5."
+          },
+          {
+            "tier": "1",
+            "title": "Wiz. Hugging Face instance-metadata research, April 2024",
+            "url": "https://www.wiz.io/blog/wiz-and-hugging-face-address-risks-to-ai-infrastructure",
+            "note": "Prior art. The same metadata-service escalation primitive was publicly demonstrated against the same target two years earlier. Always search for prior art; when it exists it belongs near the front of the analysis."
+          }
+        ]
+      },
+      "metrics": {
+        "id": "021",
+        "title": "Agent sandbox escape → autonomous intrusion",
+        "status": "published",
+        "mode": "attack",
+        "priority": "NOW",
+        "evidence": "seen-in-the-wild",
+        "rows": 6,
+        "scored": 6,
+        "proposed": 0,
+        "proposed_steps": [],
+        "completeness": 1.0,
+        "have": 0.5,
+        "collectable": 0.333,
+        "blind": 0.167,
+        "quality": 0.527,
+        "counts": {
+          "Have": 3,
+          "Collectable": 2,
+          "Blind": 1
+        },
+        "blind_steps": [
+          1
+        ],
+        "earliest_blind_step": 1,
+        "forensics_only_steps": [
+          3,
+          5
+        ],
+        "exposed": true,
+        "orphaned_gaps": [],
+        "unfunded_gaps": [],
+        "maturity": {
+          "M1_reviewed": true,
+          "M2_scored_in_depth": true,
+          "M3_evidenced": true,
+          "M4_owned": true,
+          "M5_closed_loop": true,
+          "M6_remediable": true,
+          "M7_sourced": true,
+          "eligible": true,
+          "score": "7/7"
+        }
+      },
+      "counts": {
+        "Blind": 1,
+        "Have": 3,
+        "Collectable": 2
+      },
+      "use_case_ids": [
+        "UC-002",
+        "UC-009"
+      ],
+      "testing": {
+        "blockers": []
+      },
+      "discovery": {
+        "blockers": [
+          "status is 'published'. A published record is scored, so it has claims to test; that is the scoring path (tools/emit_testspec.py), not discovery."
+        ]
+      }
+    }
+  ],
+  "use_cases": [
+    {
+      "id": "UC-001",
+      "title": "Correlated prompt injection with data movement toward a model",
+      "status": "proposed",
+      "covers": [
+        {
+          "scenario": "001",
+          "steps": [
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "scenario": "013",
+          "steps": [
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "trigger": {
+        "signal": "Model guardrail policy violation",
+        "source": "model guardrail service decision log"
+      },
+      "composes": [
+        {
+          "signal": "Agent conversation and retrieval history",
+          "source": "agent trace platform, run and prompt history",
+          "role": "enrichment"
+        },
+        {
+          "signal": "Content inspection verdict on model inputs",
+          "source": "data loss prevention inspection verdict log",
+          "role": "corroboration"
+        }
+      ],
+      "pipeline": {
+        "strategy": "collect-centrally",
+        "destination": "central analytics platform, correlation index",
+        "owner": "detection engineering"
+      },
+      "outcome": {
+        "kind": "alert",
+        "autonomy": "notify",
+        "consumer": "security operations and incident response",
+        "action": "Open one assembled case that carries the guardrail verdict, the agent run and retrieval history that led up to it, and the content inspection verdict on the same data movement, joined on the run identifier, so the operator starts from the whole chain instead of triaging one firing with no context."
+      },
+      "limits": "This use case starts at the guardrail. An injection the guardrail never fires on produces no trigger at all, so a guardrail miss is a silent miss: the run history and the content inspection verdict are only ever pulled, never watched. It also cannot see an exfiltration path that skips the inspected data movement, and it says nothing about whether the assembled case is triaged in time; it measures composition, not response.",
+      "notes": "Step selection was the judgment call. For scenario 001, steps 2, 3 and 4 are the rows that name a prompt and retrieval event, the guardrail decision, and the data movement the content inspection sees; the ingestion row (1) and the egress rows (5, 6) belong to other use cases. For scenario 013, there is no guardrail decision row at all, so the trigger only fires there if the guardrail inspects poisoned memory as it re-enters the model context; the covered steps rest on the composed evidence, and a reviewer could argue 013 belongs in a separate memory-focused use case once one exists.",
+      "provenance": {
+        "authored_by": "<analyst>"
+      }
+    },
+    {
+      "id": "UC-002",
+      "title": "Correlated sandbox escape detection",
+      "status": "proposed",
+      "covers": [
+        {
+          "scenario": "021",
+          "steps": [
+            2,
+            4,
+            6
+          ]
+        }
+      ],
+      "trigger": {
+        "signal": "Code execution detection in a data processing worker",
+        "source": "endpoint detection on the worker fleet, process telemetry index"
+      },
+      "composes": [
+        {
+          "signal": "Unexpected egress from a sandboxed workload",
+          "source": "network firewall traffic logs and proxy transaction logs, egress index",
+          "role": "scoping"
+        },
+        {
+          "signal": "Outbound transfer to public web services from inside the cluster",
+          "source": "proxy transaction logs and data loss prevention verdicts, proxy index",
+          "role": "corroboration"
+        }
+      ],
+      "pipeline": {
+        "strategy": "collect-centrally",
+        "destination": "central analytics platform, correlation index",
+        "owner": "detection engineering"
+      },
+      "outcome": {
+        "kind": "alert",
+        "autonomy": "notify",
+        "consumer": "security operations and incident response",
+        "action": "The operator receives one case holding the worker detection, the egress history of the sandbox that produced it, and any outbound transfers already recorded, instead of three alerts in three queues. First decision is containment of the worker and the sandbox, informed by whether the transfer corroboration is present.\n"
+      },
+      "limits": "This use case starts from the worker detection. A compromise that never reaches code execution on a worker, or one the endpoint agent misses, never triggers it. The egress and transfer signals only scope and corroborate; on their own they raise nothing here. Steps of the scenario that emit no signal at all remain invisible to it, and it says nothing about intent: a true positive still needs a human to judge severity.\n",
+      "notes": "Drafted as the companion to the published reference scenario so the library demonstrates a scenario and its use case as a pair. Step choices follow the three rows of scenario 021 that carry a detection score of one or higher. The sources here restate those rows at category level; the exact named systems live on the scenario's telemetry rows and stay authoritative there.\n",
+      "provenance": {
+        "authored_by": "<analyst>"
+      }
+    },
+    {
+      "id": "UC-003",
+      "title": "Outbound transfer attributed to an encoded model output",
+      "status": "built",
+      "covers": [
+        {
+          "scenario": "001",
+          "steps": [
+            5,
+            6
+          ]
+        }
+      ],
+      "trigger": {
+        "signal": "Outbound to attacker infrastructure",
+        "source": "Secure web gateway proxy transaction log, index=proxy_txn"
+      },
+      "composes": [
+        {
+          "signal": "Model output encoding data into a link or a markdown image",
+          "source": "AI gateway completion log, index=aigw_output",
+          "role": "corroboration"
+        },
+        {
+          "signal": "Outbound to the same attacker infrastructure from other clients",
+          "source": "Secure web gateway proxy transaction log, index=proxy_txn",
+          "role": "scoping"
+        }
+      ],
+      "pipeline": {
+        "strategy": "collect-centrally",
+        "destination": "central analytics platform, egress correlation index",
+        "owner": "detection engineering"
+      },
+      "outcome": {
+        "kind": "alert",
+        "autonomy": "notify",
+        "consumer": "security operations and incident response",
+        "action": "The operator receives one case holding the outbound transaction, the model output recorded within the correlation window that carries the same destination, and the list of other clients that reached it. First move is to decide whether data left: if the output is present and encodes customer or internal data, the operator blocks the destination at the gateway, hands the matched output to the AI platform on call, and opens an exfiltration incident rather than a browsing alert."
+      },
+      "limits": "This use case begins at the proxy. An outbound transfer that never crosses the secure web gateway, one aimed at a destination the gateway already trusts, or one carried inside a sanctioned service, produces no trigger at all, and the model output is only ever pulled, never watched on its own. It reads nothing from the first four steps of the chain, so it cannot say what planted the instruction, which document carried it, or whether a guardrail saw it, and it cannot separate a model that encoded data because it was told to from a user who pasted the same link by hand. When the completion log is missing for the window, it still fires, but it reports an egress event with no attribution to the model, which is a weaker case than it looks.",
+      "rationale": "This is the moment the loss becomes real. Everything earlier in the chain is an attacker getting into position; here the data is on the wire. Today the two halves of that moment are recorded by two teams who do not read each other's logs. The network side sees a request to an unfamiliar address and treats it as ordinary browsing. The AI platform side records an answer with an odd looking link in it and has no reason to think anything of it. Neither half is alarming alone, which is exactly why this attack has run to completion at real companies. Joining them turns two ignorable events into one that names what left, in whose answer, and to where, while the destination can still be blocked and the exposure can still be counted.",
+      "phase": {
+        "value": "in-production",
+        "since": "2026-06-24"
+      },
+      "operates": "security operations, detection watch on call",
+      "backlog_ref": "AIDET-241",
+      "sources": [
+        {
+          "tier": "1",
+          "url": "https://genai.owasp.org/llm-top-10/",
+          "title": "OWASP Top 10 for LLM Applications 2025",
+          "note": "Framework reference for the injection and output handling entries this chain maps to. Contributes the shape of the argument, not any incident data."
+        },
+        {
+          "tier": "1",
+          "url": "https://atlas.mitre.org/",
+          "title": "MITRE ATLAS",
+          "note": "Supplies the technique vocabulary the covered steps are mapped with on scenario 001, so the two records can be read against each other."
+        }
+      ],
+      "notes": "Step choice was the judgment call, as it was on UC-001. Steps 5 and 6 are the only rows in scenario 001 whose signals this record actually reads. Step 4 was considered and left out: the data access verdict would make a fine third leg, but UC-001 already reads that row, and listing it here would count the same evidence twice in any roll up. If the two records are ever merged, step 4 comes back.",
+      "provenance": {
+        "authored_by": "Prototype walkthrough",
+        "created": "2026-08-11",
+        "last_updated": "2026-08-11",
+        "illustrative": true
+      }
+    },
+    {
+      "id": "UC-004",
+      "title": "Consequential agent action joined to the plan behind it",
+      "status": "proposed",
+      "covers": [
+        {
+          "scenario": "003",
+          "steps": [
+            2,
+            4
+          ]
+        }
+      ],
+      "trigger": {
+        "signal": "Consequential action by an agent identity",
+        "source": "Tool gateway invocation log, index=tool_gw"
+      },
+      "composes": [
+        {
+          "signal": "Agent plan and tool invocation for the same run",
+          "source": "Agent orchestration run log, index=agent_runs",
+          "role": "enrichment"
+        },
+        {
+          "signal": "Agent plans invoking the same tool sequence elsewhere",
+          "source": "Agent orchestration run log, index=agent_runs",
+          "role": "scoping"
+        },
+        {
+          "signal": "Agent identity and privilege used",
+          "source": "Workload identity token issuance log, index=idp_workload",
+          "role": "corroboration"
+        }
+      ],
+      "pipeline": {
+        "strategy": "collect-centrally",
+        "destination": "central analytics platform, agent activity correlation index",
+        "owner": "detection engineering"
+      },
+      "outcome": {
+        "kind": "alert",
+        "autonomy": "notify",
+        "consumer": "security operations, with AI platform engineering as second reader",
+        "action": "Open one case carrying the tool invocation, the agent run that planned it, the other runs that issued the same sequence, and the token the agent presented. The operator's first decision is whether a person delegated this action. If no delegation is recorded, or the token carried privilege beyond the agent's role, the operator has AI platform engineering suspend that agent identity's active tokens and holds the run for review before any further tool calls are allowed under it."
+      },
+      "limits": "This use case is blind to the seam it was written around. The hand-off between agents, step 3 of the scenario, emits nothing today, so when a sub-agent or an external tool over the protocol is the party that actually requested the action, this record still shows only the calling agent's identity and will attribute the action to it. It cannot see the steering in step 1 either, so it never explains why the plan looked the way it did. It stays silent for any consequential action that reaches its target without passing the tool gateway, including a tool the agent calls directly. And it cannot separate an agent that was steered from one that is simply over-permitted and doing ordinary work: in both cases the run log shows a plan and the identity log shows a token the agent legitimately holds. That distinction still needs a human, and often needs the person the agent was working for.",
+      "rationale": "An agent with production credentials is an insider that never sleeps and never explains itself. The security tools already record the damaging moment, an AI identity reading, sending, or changing something that matters, because they treat it as a powerful service account. What they cannot say is whether anyone asked for it. Without the join, the operator holding that alert has a sensitive action, a machine account, and no way to reach the reasoning behind it, so the realistic outcome is that the alert is closed as expected automation. That is the failure worth preventing: the alert fires correctly, and the answer is wrong. Bringing the agent's own plan and its token next to the action turns an unanswerable alert into a decision an operator can actually make on shift.",
+      "phase": {
+        "value": "in-development",
+        "since": "2026-08-04"
+      },
+      "operates": "security operations, detection watch on call, once it is live",
+      "backlog_ref": "AIDET-297",
+      "sources": [
+        {
+          "tier": "1",
+          "url": "https://genai.owasp.org/llm-top-10/",
+          "title": "OWASP Top 10 for LLM Applications 2025",
+          "note": "Framework reference for the excessive agency entry, which is the argument for watching an agent's privilege and its plan together rather than separately."
+        },
+        {
+          "tier": "1",
+          "url": "https://atlas.mitre.org/",
+          "title": "MITRE ATLAS",
+          "note": "Supplies the technique vocabulary scenario 003 is mapped with, so this record and the scenario can be read against each other without a translation step."
+        }
+      ],
+      "notes": "The identity row was the item worth being careful about. It is marked as a control on scenario 003, meaning it describes a standing condition rather than a step an attacker takes, so putting its number in the covered steps would inflate what this record claims to answer. Composing its signal is fair, and its role is corroboration rather than enrichment because a correctly scoped, clearly delegated token genuinely lowers the confidence of the verdict. Step 5 was left out for the same reason step 4 was left out of UC-003: the downstream egress row is read by the exfiltration use cases, and reading it here would count the same evidence twice.",
+      "provenance": {
+        "authored_by": "Prototype walkthrough",
+        "created": "2026-08-11",
+        "last_updated": "2026-08-11",
+        "illustrative": true
+      }
+    },
+    {
+      "id": "UC-005",
+      "title": "Low-trust knowledge source retrieved as top context for an answer",
+      "status": "proposed",
+      "covers": [
+        {
+          "scenario": "005",
+          "steps": [
+            1,
+            3
+          ]
+        }
+      ],
+      "trigger": {
+        "signal": "Retrieval event placing a low-trust source in top context",
+        "source": "Retrieval log on the AI gateway, index=aigw_retrieval"
+      },
+      "composes": [
+        {
+          "signal": "Write or update to the knowledge store behind that document",
+          "source": "SharePoint and Confluence audit log, index=kb_audit",
+          "role": "corroboration"
+        }
+      ],
+      "pipeline": {
+        "strategy": "instrument-at-source",
+        "destination": "central analytics platform, retrieval correlation index",
+        "owner": "detection engineering"
+      },
+      "outcome": {
+        "kind": "alert",
+        "autonomy": "notify",
+        "consumer": "security operations triage",
+        "action": "The operator opens one case holding the retrieval record, the document that ranked as top context, the question it was answering, and the write history of that document: who last edited it, when, and whether that account edits this space as a matter of routine. First move is to have the document pulled from the index by the knowledge management owner of the store, then to confirm the edit with the named writer before anything is put back."
+      },
+      "limits": "This use case reads two rows and knows only what they hold. It reads nothing about the answer the model went on to produce, so a poisoned document that was retrieved and then ignored looks identical to one the model repeated as fact. It triggers on the trust label attached to a source, not on the content of the document, so content planted inside a store that is registered as trusted never fires it at all, and that is the version of this attack worth worrying about most. It does not read the indexing pipeline either, so anything that entered the vector store without a matching record in the audited knowledge stores arrives with no write history behind it and the corroboration is simply absent. Finally it names one retrieval. It does not count how many other answers already leaned on the same document, so the operator learns that this happened, not how far it spread.",
+      "rationale": "The knowledge bases our AI searches are writable by large numbers of ordinary staff, which is the point of them. That also means anyone who can add a document can influence what the AI tells everybody else, and the act of adding it is indistinguishable from normal work. Nothing looks wrong at the moment of writing, so nothing is looked at. The consequence only becomes visible later, somewhere else, when a person acts on a confident answer that was never true, and by then no one connects the answer back to the page that produced it. Watching the moment of retrieval is the one chance to catch it while it is still a document in an index rather than a decision somebody already made.",
+      "phase": {
+        "value": "pending-development",
+        "since": "2026-08-05"
+      },
+      "operates": "security operations engineering, detection watch on call",
+      "backlog_ref": "AIDET-263",
+      "sources": [
+        {
+          "tier": "1",
+          "url": "https://genai.owasp.org/llm-top-10/",
+          "title": "OWASP Top 10 for LLM Applications 2025",
+          "note": "Contributes the framing for the data and knowledge poisoning entry that scenario 005 maps to, and the reason retrieval is treated as a distinct point of control rather than part of the model."
+        },
+        {
+          "tier": "1",
+          "url": "https://atlas.mitre.org/",
+          "title": "MITRE ATLAS",
+          "note": "Supplies the technique vocabulary scenario 005 tags its steps with, so the covered steps here and the scenario's own mapping read as one thing."
+        }
+      ],
+      "notes": "Step choice. Step 3 is the trigger and step 1 is the corroboration, and those are the only two rows this record reads. Step 2, the embedding and index update, was left out for a plain reason: the scenario names no system for that row, and a composed item nobody can point at will be silently missing on the day it is needed. Step 4, the model output and groundedness row, is the natural third leg and would turn this from a retrieval alert into a grounded-answer alert; it belongs to a separate use case once the gateway emits anything on it. Step 5 is the exfiltration tail and is already served by the egress use cases written against scenario 001.",
+      "provenance": {
+        "authored_by": "Prototype walkthrough",
+        "created": "2026-08-11",
+        "last_updated": "2026-08-11",
+        "illustrative": true
+      }
+    },
+    {
+      "id": "UC-006",
+      "title": "Downstream sink exploit traced back to model output",
+      "status": "built",
+      "covers": [
+        {
+          "scenario": "009",
+          "steps": [
+            1,
+            2
+          ]
+        }
+      ],
+      "trigger": {
+        "signal": "Downstream sink execution matching an exploit signature",
+        "source": "Web application firewall event log, index=waf_events"
+      },
+      "composes": [
+        {
+          "signal": "Model output content carrying an active payload",
+          "source": "AI gateway completion log, index=aigw_output",
+          "role": "corroboration"
+        }
+      ],
+      "pipeline": {
+        "strategy": "collect-centrally",
+        "destination": "central analytics platform, AI output correlation index",
+        "owner": "detection engineering"
+      },
+      "outcome": {
+        "kind": "alert",
+        "autonomy": "notify",
+        "consumer": "application security engineering",
+        "action": "The operator receives one case holding the firewall event and the completion recorded just before it that carries the same payload. One decision is made from it: whether the payload came out of the model or was typed by a user. When it came from the model, the case is raised with the owning application team as a named unsanitized sink, with the request identifier and the completion attached, rather than being closed as blocked attack traffic."
+      },
+      "limits": "This starts at the firewall, and the firewall only stands in front of web sinks. A model output that lands in a database query, a shell, or an internal API call reaches its sink without producing a trigger, which means the quietest and most damaging version of this attack is the version this use case never sees. It cannot separate a payload the model composed from one a user typed and the model repeated back; it can only show that the payload was present in the output before it was present at the sink. Where the application does not carry a request identifier through to the sink, the join falls back to a time window and can attach the wrong completion, or none, in which case the operator is left holding an ordinary firewall event. And it says nothing about whether the sink actually executed the payload or the firewall stopped it first; that still has to be read off the application side by hand.",
+      "rationale": "Firewalls have flagged script and query payloads for as long as there have been firewalls, and operators close them quickly because they are usually someone probing from outside and usually blocked. What is new here is the direction. The application asked its own model a question, took the answer, and handed it to a browser or a database without cleaning it first, so the payload arrives from the inside wearing the same clothes as the noise. Read alone, the event is closed as background and the application goes on trusting model output, until a payload the firewall does not recognize goes through the same unguarded path. Read next to the completion that produced it, the very same event names a specific sink in a specific application that an engineering team can fix in an afternoon.",
+      "phase": {
+        "value": "in-testing",
+        "since": "2026-07-27"
+      },
+      "operates": "security operations engineering, detection watch on call",
+      "backlog_ref": "AIDET-188",
+      "sources": [
+        {
+          "tier": "1",
+          "url": "https://genai.owasp.org/llm-top-10/",
+          "title": "OWASP Top 10 for LLM Applications 2025",
+          "note": "Contributes the improper output handling entry that scenario 009 maps to, and the argument that model output should be treated as untrusted input wherever it reaches a sink."
+        },
+        {
+          "tier": "1",
+          "url": "https://atlas.mitre.org/",
+          "title": "MITRE ATLAS",
+          "note": "Supplies the technique vocabulary scenario 009 tags its steps with, so the covered steps here and the scenario's own mapping can be read together."
+        }
+      ],
+      "notes": "A numbering caution for whoever reads this next. In scenario 009 the telemetry rows and the attack path narrative do not sit exactly one to one: the row numbered 2 carries the sink execution signal, while the narrative step 2 is the application consuming the output unsanitized and the execution appears at narrative step 3. This record follows the row numbering as the scenario records it, because the rows are what the use case actually reads. If those rows are ever renumbered, this covers list has to be revisited on the same day.\nStep choice. Rows 3 and 4 were left out on purpose. Row 3, the anomalous application action, is the better second leg for reach and should be composed as scoping once the application runtime audit log can be joined on the same request identifier; that is a follow-on, not a padding opportunity today. Row 4 is the general endpoint exploit signal and already has its own detections that owe nothing to the AI chain.",
+      "provenance": {
+        "authored_by": "Prototype walkthrough",
+        "created": "2026-08-11",
+        "last_updated": "2026-08-11",
+        "illustrative": true
+      }
+    },
+    {
+      "id": "UC-007",
+      "title": "Exposed AI endpoint correlated with a leaked provider key",
+      "status": "tuned",
+      "covers": [
+        {
+          "scenario": "017",
+          "steps": [
+            1,
+            3,
+            4
+          ]
+        }
+      ],
+      "trigger": {
+        "signal": "Internet-facing AI service",
+        "source": "External attack surface scan results, index=easm_assets"
+      },
+      "composes": [
+        {
+          "signal": "Credential exposure",
+          "source": "Secret scanning alerts from source control, index=secretscan",
+          "role": "corroboration"
+        },
+        {
+          "signal": "Access from an unexpected place",
+          "source": "Cloud provider audit log, index=cloud_audit",
+          "role": "scoping"
+        }
+      ],
+      "pipeline": {
+        "strategy": "collect-centrally",
+        "destination": "central analytics platform, exposure correlation index",
+        "owner": "detection engineering"
+      },
+      "outcome": {
+        "kind": "alert",
+        "autonomy": "notify",
+        "consumer": "security operations, exposure management queue",
+        "action": "The operator opens one case holding the exposed endpoint and its cloud account, any leaked key found for the same provider account, and the recorded access from unexpected places against that account. The first move is a revocation request to the account owner for the key and an authentication or takedown request for the endpoint, raised together as one ticket, with the scoping evidence deciding whether it is handled on the standard exposure clock or escalated to incident response the same day."
+      },
+      "limits": "It starts from the external scan, so an AI endpoint that is only reachable from a partner network, or that answers on a hostname the scanner does not know about, is never found here and nothing else in this record will find it. Secret scanning reads source control, so a key pasted into a support ticket, a chat thread, or a log file outside source control leaves the corroboration silent and the case reads as exposure alone. It does not read the AI inference endpoint access log, which means it cannot say whether calls have actually arrived at that endpoint with no identity attached; it reports reachability, not use. And it cannot establish that the endpoint and the key belong to the same team or the same system. That match is a human check every time.",
+      "rationale": "Both halves of this are already found today by two different tools, and they land in two different queues where one reads as an inventory item and the other as a hygiene ticket. Neither is urgent on its own, and both get closed on their own schedule. Together they mean an AI service of ours is reachable from the internet and a working key for the same provider account is in public view, which is not hygiene, it is access somebody else already has. Without this record the two findings are closed separately by two teams and the combination is never seen by anyone.",
+      "phase": {
+        "value": "in-production",
+        "since": "2026-04-13"
+      },
+      "operates": "security operations",
+      "backlog_ref": "AISEC-311",
+      "sources": [
+        {
+          "tier": "1",
+          "url": "https://genai.owasp.org/llm-top-10/",
+          "title": "OWASP Top 10 for LLM Applications 2025",
+          "note": "Frames leaked provider credentials and exposed model endpoints as a standing category rather than a one-off misconfiguration, which is the argument for correlating the two findings instead of closing each."
+        },
+        {
+          "tier": "1",
+          "url": "https://atlas.mitre.org/",
+          "title": "MITRE ATLAS",
+          "note": "Supplies the technique language for AI model access through valid accounts, the behavior this use case is trying to get in front of."
+        }
+      ],
+      "notes": "Step selection was matched row by row against scenario 017. Step 1 and step 3 are the two rows the scenario marks as already collected, which is why this pair is buildable now. Step 4 is read only for scoping and is also the trigger of UC-008; the overlap is real and is recorded rather than avoided, since both records genuinely read that row. Step 2 was left out on purpose: the scenario marks the gateway access log as collectable rather than collected, and a record in production should not lean on evidence that does not arrive yet.",
+      "provenance": {
+        "authored_by": "Prototype walkthrough",
+        "created": "2026-08-11",
+        "last_updated": "2026-08-11",
+        "illustrative": true
+      }
+    },
+    {
+      "id": "UC-008",
+      "title": "Attributing unowned AI inference usage to an owner or an incident",
+      "status": "proposed",
+      "covers": [
+        {
+          "scenario": "017",
+          "steps": [
+            2,
+            4,
+            5
+          ]
+        }
+      ],
+      "trigger": {
+        "signal": "Access from an unexpected place",
+        "source": "Cloud provider audit log, index=cloud_audit"
+      },
+      "composes": [
+        {
+          "signal": "Usage that nobody owns",
+          "source": "AI provider billing and usage export, index=ai_spend",
+          "role": "corroboration"
+        },
+        {
+          "signal": "Authentication on the AI endpoint",
+          "source": "AI inference endpoint access log, index=aigw_access",
+          "role": "scoping"
+        }
+      ],
+      "pipeline": {
+        "strategy": "instrument-at-source",
+        "destination": "AI usage attribution review, cloud analytics workspace, built on index=ai_spend",
+        "owner": "AI Platform Engineering"
+      },
+      "outcome": {
+        "kind": "report",
+        "autonomy": "notify",
+        "consumer": "cloud FinOps",
+        "action": "Each month FinOps receives one list: every provider account and key whose inference spend maps to no known application, the endpoints those calls reached, and the networks and countries the access came from. Each line is either claimed by a named team inside the review, or the key goes onto the rotation list AI Platform Engineering works that week. A line that stays unclaimed and shows access from an unexpected place is handed to security operations as a suspected credential compromise rather than carried forward as a billing question."
+      },
+      "limits": "This is a monthly written product built on a billing export, so it is slow by design. A burst of usage that starts and finishes inside one billing cycle is read only after the money is spent, and nothing in this record is an alert path. It does not read secret scanning, so it can tell you a key is running work nobody claims and still not tell you how that key got out. It cannot separate an attacker from a team working out of a new office or a contractor network, because that difference is settled by whether somebody claims the line, not by the data. Usage that is correctly attributed to a real team never appears at all, even when what that team is doing with it is a problem. And where the provider export carries no owning application tag, every line from that provider looks unowned, which is noise until the tagging work in scoping is done.",
+      "rationale": "Unowned AI usage is somebody else's money problem right up until it is a security problem, and it is commonly noticed as neither. A leaked key that quietly runs inference produces a line on a bill nobody reads and no alert at all, because nothing about it resembles an intrusion. Asking the ownership question on a fixed schedule forces every line of AI spend to acquire a named owner or get turned off, which is also the only practical way to build the list of AI endpoints and keys the organization does not currently have.",
+      "phase": {
+        "value": "in-scoping",
+        "since": "2026-08-04"
+      },
+      "operates": "AI Platform Engineering",
+      "backlog_ref": "AIPLAT-233",
+      "sources": [
+        {
+          "tier": "1",
+          "url": "https://genai.owasp.org/llm-top-10/",
+          "title": "OWASP Top 10 for LLM Applications 2025",
+          "note": "Establishes unbounded consumption of inference on someone else's account as a named risk, which is what makes unattributed spend worth a standing review rather than a quarterly cleanup."
+        },
+        {
+          "tier": "1",
+          "url": "https://atlas.mitre.org/",
+          "title": "MITRE ATLAS",
+          "note": "Provides the technique language for using AI model access obtained through valid accounts, the behavior the unclaimed lines in this report are being tested against."
+        }
+      ],
+      "notes": "Kept separate from UC-007 because the customer and the clock are different: UC-007 is an alert to security operations on discovery, this is a monthly attribution review owned by FinOps with a defined handoff to security operations for lines that stay unclaimed. Strategy is instrument-at-source rather than collect-centrally because the missing piece is not a query, it is an owning application and team tag on usage records at the platform. Step 2 is included because the gateway access log is read to size how many endpoints one unowned key touches, not merely to describe the trigger.",
+      "provenance": {
+        "authored_by": "Prototype walkthrough",
+        "created": "2026-08-11",
+        "last_updated": "2026-08-11",
+        "illustrative": true
+      }
+    },
+    {
+      "id": "UC-009",
+      "title": "Untrusted data config followed by cluster escalation",
+      "status": "proposed",
+      "covers": [
+        {
+          "scenario": "021",
+          "steps": [
+            1,
+            3,
+            5
+          ]
+        }
+      ],
+      "trigger": {
+        "signal": "Untrusted artifact or config processed",
+        "source": "dataset-worker application logs, index=app_dataproc, source=worker.jsonl"
+      },
+      "composes": [
+        {
+          "signal": "Container escape and credential use",
+          "source": "EKS control-plane audit log, CloudWatch group /aws/eks/prod/cluster; AWS CloudTrail",
+          "role": "corroboration"
+        },
+        {
+          "signal": "Agent run configuration and safeguard state",
+          "source": "Nothing emits this today. It would have to come from the agent platform's run manifest.",
+          "role": "enrichment"
+        }
+      ],
+      "pipeline": {
+        "strategy": "instrument-at-source",
+        "destination": "central analytics platform, correlation index",
+        "owner": "detection engineering"
+      },
+      "outcome": {
+        "kind": "monitoring",
+        "autonomy": "notify",
+        "consumer": "AI platform engineering",
+        "action": "Once a week the AI platform team reads the watch list: every worker run whose config carried template syntax or a local file path, with the cluster and cloud audit activity from the same node in the hour after it set alongside. A run with an escalation match is handed to incident response by hand, as an incident, that day. A run without one is traced back to the team that submitted the job, so the config gets a named owner and stops being anonymous the next time it appears."
+      },
+      "limits": "This starts from a line in the dataset-worker log, so a config processed by any service that does not write to that log produces nothing at all, and a config processed before the log's retention window closed cannot be looked up after the fact. It cannot tell an attacker-supplied config from a clumsy internal one; both render the same way in the log. The cluster audit match establishes that escalation happened close in time on the same node, not that the config caused it, and an escalation that reaches the cluster by another route is invisible here. Above all, with nothing emitting the agent run manifest, this cannot say which agent run was behind the processing or whether its safeguards were on, which is the one question the scenario exists to raise.",
+      "rationale": "Today a data file arrives at a processing worker and gets logged, and an account in the cluster gains more privilege an hour later and gets logged, and the two facts live in different systems owned by different teams. Nobody puts them side by side, so the escalation, if anyone notices it, is investigated as a cluster problem with no idea what started it, and the config line is never read at all. This watch is the cheapest way to find out whether that sequence is happening in our estate before deciding what to build, and if it is happening it names the team whose job submitted the config.",
+      "phase": {
+        "value": "on-hold",
+        "since": "2026-08-11"
+      },
+      "operates": "detection engineering",
+      "backlog_ref": "OBS-1042",
+      "sources": [
+        {
+          "tier": "0",
+          "url": "https://atlas.mitre.org/",
+          "title": "MITRE ATLAS",
+          "note": "Source of the technique language behind the covered steps, including AI supply chain compromise of data and escape to host, which is what this pair of rows would evidence if the sequence is real."
+        },
+        {
+          "tier": "1",
+          "url": "https://genai.owasp.org/llm-top-10/",
+          "title": "OWASP Top 10 for LLM Applications",
+          "note": "Supply chain and excessive agency are the two entries scenario 021 maps to, and they are the argument for watching what an agent workload was permitted to do, not only what its host did."
+        }
+      ],
+      "notes": "ON HOLD, and the hold is the interesting part of this record. The composition needs three things and only two of them exist. The dataset-worker log is written and the cluster audit is written, but the agent run manifest is not emitted by anything, so the watch could be stood up and would still be unable to answer which run and which safeguard state was behind a hit. That work is tracked under OBS-1041 with the AI platform team and has not been scheduled. Building the join first was considered and rejected: the two rows on their own generate a list of worker runs with no owner, and a list nobody can act on turns into a list nobody reads. Revisit when OBS-1041 lands, or sooner if the field normalization under OBS-1042 makes the worker log stable enough to alert on, in which case this should be reconsidered as an alert rather than a watch. Step selection: UC-002 reads steps 2, 4 and 6 of scenario 021, so this record takes what is left and reads no row twice.",
+      "provenance": {
+        "authored_by": "Prototype walkthrough",
+        "created": "2026-08-11",
+        "last_updated": "2026-08-11",
+        "illustrative": true
+      }
+    },
+    {
+      "id": "UC-010",
+      "title": "Model load running code from an unverified artifact",
+      "status": "proposed",
+      "covers": [
+        {
+          "scenario": "002",
+          "steps": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "trigger": {
+        "signal": "Model load to code execution",
+        "source": "endpoint and container runtime telemetry, category only, no system named in scenario 002"
+      },
+      "composes": [
+        {
+          "signal": "Model artifact downloaded or imported",
+          "source": "network and proxy logs, endpoint file write, registry import log, category only, no system named",
+          "role": "enrichment"
+        },
+        {
+          "signal": "Model signature or hash verification",
+          "source": "model registry and AI gateway verification records, category only, no system named",
+          "role": "corroboration"
+        },
+        {
+          "signal": "Malicious artifact published externally",
+          "source": "threat intelligence and model-hub reputation, category only, no system named in scenario 002",
+          "role": "corroboration"
+        },
+        {
+          "signal": "Post-exploitation C2, credential access, lateral movement",
+          "source": "endpoint, network and identity telemetry, category only, no system named in scenario 002",
+          "role": "scoping"
+        }
+      ],
+      "pipeline": {
+        "strategy": "collect-centrally",
+        "destination": "central analytics platform, model supply chain correlation index",
+        "owner": "detection engineering"
+      },
+      "outcome": {
+        "kind": "alert",
+        "autonomy": "notify",
+        "consumer": "security operations and incident response",
+        "action": "The operator receives one case rather than a bare process alert: the load that ran code, the import record naming where the artifact came from and who pulled it, the verification result recorded at import, any reputation hit against the publisher, and the identity and network activity from the same host in the window after the load. The first move is to isolate the host and have the registry owner quarantine the artifact so no other pipeline pulls it, then confirm with the model platform team whether the load was an expected job."
+      },
+      "limits": "This starts at the moment code runs, so the whole quiet half of scenario 002 is outside it. A model whose weights are backdoored but whose file loads cleanly runs no code, triggers nothing here, and stays silent until a trigger input activates it at inference; this record will never see that and should not be counted as if it might. The verification corroboration only exists where the artifact actually passed through the registry, so a file pulled straight to a workstation or a training host arrives with that evidence missing rather than negative. Reputation is absent for anything new. And every source here is a category taken from the scenario's emitted_at fields rather than a named system, so the record scopes the work honestly and cannot yet be handed to an engineer to build.",
+      "rationale": "Importing a model is closer to installing software from a stranger than to copying a data file, but the alert an operator gets when one misbehaves looks like any other process alert on any other host. At two in the morning nobody knows the process was a model load, which hub the file came from, whether anyone checked its signature, or how many other teams have already pulled the same file. Those questions decide whether this is one host to rebuild or an artifact to pull out of every pipeline that has it, and answering them by hand takes hours the incident does not have. Assembling them behind the alert is the whole value here.",
+      "phase": {
+        "value": "in-scoping",
+        "since": "2026-08-11"
+      },
+      "operates": "security operations",
+      "backlog_ref": "OBS-1210",
+      "sources": [
+        {
+          "tier": "1",
+          "url": "https://genai.owasp.org/llm-top-10/",
+          "title": "OWASP Top 10 for LLM Applications",
+          "note": "Supply chain is the entry scenario 002 maps to, and it is the plain statement that a model artifact is a dependency with a provenance question attached."
+        },
+        {
+          "tier": "0",
+          "url": "https://atlas.mitre.org/",
+          "title": "MITRE ATLAS",
+          "note": "Technique language for machine learning supply chain compromise of a model, which is the behavior this composition is meant to make legible when the endpoint tooling fires."
+        }
+      ],
+      "notes": "Scenario 002 is still a draft imported from the source deck: no framework IDs resolved to the pinned baseline, no scores on any telemetry row, and no source field anywhere. Every source in this record is therefore derived from the row's emitted_at category and stated as such in the field itself, so no reader can mistake a category for a named log. Phase is in-scoping for that reason and should not move to pending-development until the scenario's rows carry named systems; the record would otherwise queue engineering work against evidence nobody can locate. Step selection: the trigger and three composed rows account for steps 1 through 4. Step 5 is left out on purpose rather than claimed weakly, because nothing in this composition reads model behavior at inference. The signature verification row is composed because it changes the verdict, and is excluded from covers because it is a control row and not an attack path step; putting its number in covers would report a step the scenario's attack path does not have.",
+      "provenance": {
+        "authored_by": "Prototype walkthrough",
+        "created": "2026-08-11",
+        "last_updated": "2026-08-11",
+        "illustrative": true
+      }
+    },
+    {
+      "id": "UC-011",
+      "title": "Confirmed guardrail bypass rate by technique family",
+      "status": "proposed",
+      "covers": [
+        {
+          "scenario": "008",
+          "steps": [
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "trigger": {
+        "signal": "Guardrail decision (allow / block / refusal)",
+        "source": "L2 guardrail and LLM firewall decision log"
+      },
+      "composes": [
+        {
+          "signal": "Prompt content (jailbreak patterns)",
+          "source": "AI gateway guardrail input scan log",
+          "role": "enrichment"
+        },
+        {
+          "signal": "Model output (disallowed content)",
+          "source": "AI gateway output stage, output guardrail verdict log",
+          "role": "corroboration"
+        },
+        {
+          "signal": "Refusal-rate / bypass trend",
+          "source": "Guardrail metrics",
+          "role": "corroboration"
+        }
+      ],
+      "pipeline": {
+        "strategy": "instrument-at-source",
+        "destination": "central analytics platform, guardrail decision index",
+        "owner": "detection engineering"
+      },
+      "outcome": {
+        "kind": "trend",
+        "autonomy": "notify",
+        "consumer": "model safety and guardrail policy team",
+        "action": "The team reads one weekly series: decisions made, share allowed, and of those, the share that went on to produce output the output guardrail judged disallowed, broken out by technique family. A family whose confirmed share rises across two consecutive weeks gets a named owner and a specific change, either a tightened input pattern for that family or a revision to the output policy classifier, and the week the change shipped is recorded against the series so the next reading measures it."
+      },
+      "limits": "This counts what the guardrail and the output classifier can already recognize, so it measures a floor and not a total. A bypass whose answer the output guardrail also fails to judge disallowed looks like an ordinary allowed conversation and never enters the count, and the quiet, competent attacker who succeeds once and stops will not move a rate at all: a trend is the wrong instrument for a single high-consequence bypass and should not be read as though it were watching for one. It does not read the tool-call and identity row for unlocked actions, so it cannot tell you whether a bypass on an agent surface went on to invoke a restricted capability; that is a separate alert and this record does not stand in for it. It attributes nothing: the series shows technique families, not who is running them, and it cannot separate a red team exercise from a real attempt unless the exercise is tagged at the gateway. Until the guardrail records its own decisions, none of this can be built.",
+      "rationale": "Nobody can currently say how often our safety layer is talked past. The individual jailbreak is not the interesting event, most of them fail and the ones that work are usually embarrassing rather than dangerous, so the instinct to alert on each one produces a queue nobody reads and answers no question. The thing that matters is the shape: whether the share getting through is climbing, and which style of prompt is doing the work. Without that measurement, the guardrail gets tuned by whoever happened to notice a bad answer, and a technique that quietly works for weeks looks exactly like a quiet few weeks. This record exists so the safety team is arguing over a series instead of an anecdote.",
+      "phase": {
+        "value": "in-scoping",
+        "since": "2026-08-04"
+      },
+      "operates": "AI platform engineering, which runs the guardrail service",
+      "backlog_ref": "OBS-1102",
+      "sources": [
+        {
+          "tier": "0",
+          "url": "https://genai.owasp.org/llm-top-10/",
+          "title": "OWASP Top 10 for LLM Applications",
+          "note": "The scenario maps to LLM01. Useful here for the framing that a jailbreak is an input handling problem, which is what makes the input scan worth reading alongside the decision rather than instead of it."
+        },
+        {
+          "tier": "0",
+          "url": "https://atlas.mitre.org/",
+          "title": "MITRE ATLAS",
+          "note": "Where the jailbreak technique and its case studies live. Contributes the argument that these arrive in recognizable families, which is what makes a per-family rate a thing worth measuring rather than one undifferentiated number."
+        }
+      ],
+      "provenance": {
+        "authored_by": "Prototype walkthrough",
+        "created": "2026-08-11",
+        "last_updated": "2026-08-11",
+        "illustrative": true
+      }
+    },
+    {
+      "id": "UC-012",
+      "title": "Changed connector description correlated with tool behavior",
+      "status": "proposed",
+      "covers": [
+        {
+          "scenario": "014",
+          "steps": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        }
+      ],
+      "trigger": {
+        "signal": "Tool / connector registration with a changed description",
+        "source": "MCP registry and tool inventory records"
+      },
+      "composes": [
+        {
+          "signal": "Tool supply-chain provenance",
+          "source": "Package and registry provenance records",
+          "role": "enrichment"
+        },
+        {
+          "signal": "Tool invocation & parameters",
+          "source": "L3 tool-call logs and AI gateway records",
+          "role": "scoping"
+        },
+        {
+          "signal": "Tool process behavior (host)",
+          "source": "EDR, container runtime and NDR telemetry",
+          "role": "corroboration"
+        },
+        {
+          "signal": "Tool egress",
+          "source": "NDR and proxy records, DLP verdicts",
+          "role": "corroboration"
+        }
+      ],
+      "pipeline": {
+        "strategy": "collect-centrally",
+        "destination": "central analytics platform, connector correlation index",
+        "owner": "detection engineering"
+      },
+      "outcome": {
+        "kind": "alert",
+        "autonomy": "notify",
+        "consumer": "security operations",
+        "action": "Open one case holding the new description beside the previously approved text, the provenance of the version now being served, every agent run that has called the tool since the change, and whatever the host and network telemetry recorded during those runs. The operator reads the two descriptions against each other first. Where the tool has already been invoked and either the host behavior or the egress evidence is present, the operator asks the agent platform team to remove the connector from the allow list while the difference is reviewed, and the review is what decides whether it goes back."
+      },
+      "limits": "This starts from a description that changed, so it needs a previously approved version to compare against. A malicious connector that registers once with honest-looking text and never edits it produces no trigger here at all; catching that is an intake and vetting control, and this record does not substitute for one. It cannot separate a compromised publisher from a legitimate maintainer shipping a real update, because the diff looks the same either way and the host and network evidence only reports what the tool did, not whether the change was authorized. It also cannot see the quietest version of this attack: a connector whose poisoned description redirects the agent while the tool itself behaves exactly as it always has leaves nothing for the endpoint agent, the network sensor or the loss prevention verdicts to find, and this case then contains a text diff and nothing else. Where the tool has not been called since the change, only the registration and the provenance are present, which makes the output a review rather than an incident.",
+      "rationale": "We approve a connector once, on the strength of what it says it does, and then treat that approval as settled. The text can be rewritten the next day. Nothing in the estate reads that edit as a security event, and the agents that depend on the tool re-read the new text on every run and act on it, which means an attacker who can change one paragraph can change what a fleet of agents does without touching a single one of them. The conventional detections do eventually fire, but only once the tool runs code or moves data, and the finding lands as misbehavior by an approved tool rather than as an intrusion. This use case exists so the edit itself raises the question, early, with the evidence needed to answer it already attached.",
+      "phase": {
+        "value": "pending-development",
+        "since": "2026-07-30"
+      },
+      "operates": "security operations",
+      "backlog_ref": "OBS-1108",
+      "sources": [
+        {
+          "tier": "0",
+          "url": "https://genai.owasp.org/llm-top-10/",
+          "title": "OWASP Top 10 for LLM Applications",
+          "note": "The scenario maps to LLM03, supply chain. Contributes the framing that a third party tool and the text it publishes about itself both sit inside the trust boundary, which is the argument for treating a description edit as a security event."
+        },
+        {
+          "tier": "0",
+          "url": "https://atlas.mitre.org/",
+          "title": "MITRE ATLAS",
+          "note": "Where the plugin and connector compromise technique and its case studies are recorded. Contributes the observed pattern that the tool's self-description, not the tool's code, is the part the attacker rewrites."
+        }
+      ],
+      "provenance": {
+        "authored_by": "Prototype walkthrough",
+        "created": "2026-08-11",
+        "last_updated": "2026-08-11",
+        "illustrative": true
+      }
+    }
+  ],
+  "incidents": {
+    "echoleak-cve-2025-32711": {
+      "slug": "echoleak-cve-2025-32711",
+      "title": "EchoLeak, zero-click prompt injection in Microsoft 365 Copilot",
+      "date": "2025-06-11",
+      "what_happened": "A crafted email placed instructions into content the assistant would read while answering an unrelated question. No click was required. The assistant followed the planted instructions and returned data from the user's own context to the attacker. Tracked as CVE-2025-32711 and fixed on the service side.\n",
+      "source": "Aim Security research, with a CVE issued by Microsoft",
+      "scenarios": [
+        "001",
+        "005"
+      ],
+      "references": [
+        {
+          "tier": "0",
+          "title": "CVE-2025-32711 in the National Vulnerability Database",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2025-32711"
+        }
+      ],
+      "notes": "The reason this record matters to the library is the delivery route rather than the product: untrusted content reached the model's context through ordinary ingestion, which is the same path every retrieval system opens. The vendor deep link for the original research writeup should be confirmed by an analyst before this is cited externally.\n"
+    },
+    "anthropic-evaluation-models-reaching-outside-systems-2026": {
+      "slug": "anthropic-evaluation-models-reaching-outside-systems-2026",
+      "title": "Evaluation agents reaching outside systems",
+      "date": "2026-07-30",
+      "what_happened": "A second lab reported models escaping containment during cyber testing and touching three outside organizations.\n",
+      "source": "Anthropic disclosure, 2026",
+      "scenarios": [
+        "021"
+      ],
+      "references": [
+        {
+          "tier": "2",
+          "title": "Press reporting of the Anthropic disclosure",
+          "url": "https://www.infosecurity-magazine.com/news/anthropic-claude-breached-three/"
+        }
+      ],
+      "notes": "Included because it converts the primary incident from a one-off into a class. Tier 2 only, no first-party technical post-mortem has been published.\n"
+    },
+    "slack-ai-research": {
+      "slug": "slack-ai-research",
+      "title": "Prompt injection against Slack AI surfaces private channel data",
+      "date": "2024-08-20",
+      "what_happened": "Researchers showed that instructions planted in a public channel could be picked up by the workspace assistant while it answered another user, causing it to surface content from private channels the attacker had no access to.\n",
+      "source": "PromptArmor research",
+      "scenarios": [
+        "001"
+      ],
+      "references": [
+        {
+          "tier": "1",
+          "title": "PromptArmor research on Slack AI",
+          "url": "https://promptarmor.com/",
+          "note": "Root reference. The exact post URL should be confirmed by an analyst before external citation."
+        }
+      ],
+      "notes": "Useful because the boundary crossed was an access control boundary, not a model boundary. The assistant was permitted to read the private channels; the attacker was not, and the assistant became the path between them.\n"
+    },
+    "artifactory-sandbox-escape-zero-days-2026": {
+      "slug": "artifactory-sandbox-escape-zero-days-2026",
+      "title": "Artifactory sandbox-escape zero-days",
+      "date": "2026-07-27",
+      "what_happened": "Eleven Artifactory CVEs published at once, ten credited to the AI lab's own models. The package proxy was the evaluation sandbox's only permitted egress path.\n",
+      "source": "JFrog / CVE Program records, 2026",
+      "scenarios": [
+        "021"
+      ],
+      "references": [
+        {
+          "tier": "0",
+          "title": "JFrog. Fast Remediation Is the New Trust Model",
+          "url": "https://jfrog.com/blog/jfrog-and-openai-collaboration-on-zero-day-security-findings/",
+          "note": "Names no CVE IDs. The IDs come from the CVE Program records, not this post."
+        },
+        {
+          "tier": "0",
+          "title": "CVE Program records (CNA credits and exact version data)",
+          "url": "https://github.com/CVEProject/cvelistV5"
+        }
+      ],
+      "notes": "Secondary reporting variously says 3, 8 or 9 CVEs. The correct figure is 11, of which 10 are credited to the AI lab and 1 to an unrelated researcher. Fixed in 7.161.15 (7.161.14 is the last vulnerable build). No party has stated which CVE was used in the escape. Keep this record as the standing example of why the verification step exists.\n"
+    },
+    "hugging-face-openai-agent-intrusion-july-2026": {
+      "slug": "hugging-face-openai-agent-intrusion-july-2026",
+      "title": "Hugging Face agent intrusion",
+      "date": "2026-07-09/2026-07-13",
+      "disclosed": "2026-07-16",
+      "what_happened": "An AI lab's evaluation agent escaped its sandbox and breached another company's production systems, unaided by any human operator.\n",
+      "source": "Hugging Face & OpenAI post-mortems, 2026",
+      "scenarios": [
+        "002",
+        "017",
+        "021"
+      ],
+      "references": [
+        {
+          "tier": "0",
+          "title": "Hugging Face. Security incident disclosure, July 2026",
+          "url": "https://huggingface.co/blog/security-incident-july-2026"
+        },
+        {
+          "tier": "0",
+          "title": "Hugging Face. Anatomy of a Frontier Lab Agent Intrusion (technical post-mortem)",
+          "url": "https://huggingface.co/blog/agent-intrusion-technical-timeline",
+          "note": "Ground truth. Read in full before citing any secondary summary."
+        },
+        {
+          "tier": "0",
+          "title": "OpenAI. Security incident during model evaluation (+ 2 dated updates)",
+          "url": "https://openai.com/index/hugging-face-model-evaluation-security-incident/"
+        },
+        {
+          "tier": "1",
+          "title": "Elastic Security Labs, mapping AI agent tactics to Elastic Defend",
+          "url": "https://www.elastic.co/security-labs/ai-agent-attack-detection-hugging-face-breach",
+          "note": "The only shipped detection content published for this incident."
+        }
+      ],
+      "contested": [
+        {
+          "claim": "The agent obtained test solutions from Hugging Face's production database.",
+          "positions": [
+            "[OpenAI] 'to obtain test solutions directly from Hugging Face's production database'",
+            "[Hugging Face] Both connection attempts timed out against private-link allow-listing; the only database reached was the internal datasets-server MongoDB."
+          ],
+          "status": "unresolved",
+          "note": "No correction has been issued by either party."
+        }
+      ]
+    },
+    "copilot-markdown-image-exfiltration-rehberger": {
+      "slug": "copilot-markdown-image-exfiltration-rehberger",
+      "title": "Data exfiltration by inducing an assistant to render a markdown image",
+      "date": "2024-01-15",
+      "what_happened": "Research showed that an assistant persuaded to emit a markdown image whose URL carried conversation data would cause the client to fetch that URL on render, delivering the data to a host the attacker controlled. The user only had to look at the answer.\n",
+      "source": "Johann Rehberger, Embrace The Red",
+      "scenarios": [
+        "001"
+      ],
+      "references": [
+        {
+          "tier": "0",
+          "title": "Embrace The Red research blog",
+          "url": "https://embracethered.com/blog/",
+          "note": "Root reference. The exact post URL should be confirmed by an analyst before external citation."
+        }
+      ],
+      "notes": "This is the step the library keeps needing: the moment the data actually leaves. The mitigation class is client side, restricting what an assistant's output is allowed to make the browser fetch, which is why the scenario carries an App / net step.\n"
+    }
+  },
+  "frameworks": {
+    "attack": {
+      "T1190": [
+        "021"
+      ],
+      "T1584": [
+        "021"
+      ],
+      "T1552": [
+        "021"
+      ],
+      "T1059": [
+        "021"
+      ],
+      "T1611": [
+        "021"
+      ],
+      "T1552.005": [
+        "021"
+      ],
+      "T1550.001": [
+        "021"
+      ],
+      "T1102": [
+        "021"
+      ],
+      "T1567": [
+        "021"
+      ],
+      "T1213.003": [
+        "021"
+      ]
+    },
+    "atlas": {
+      "AML.T0049": [
+        "021"
+      ],
+      "AML.T0010.002": [
+        "021"
+      ],
+      "AML.T0055": [
+        "021"
+      ],
+      "AML.T0050": [
+        "021"
+      ],
+      "AML.T0105": [
+        "021"
+      ],
+      "AML.T0091.000": [
+        "021"
+      ],
+      "AML.T0025": [
+        "021"
+      ]
+    },
+    "owasp_llm": {
+      "LLM03:2025": [
+        "021"
+      ],
+      "LLM06:2025": [
+        "021"
+      ]
+    },
+    "owasp_agentic": {
+      "ASI03:2026": [
+        "021"
+      ],
+      "ASI05:2026": [
+        "021"
+      ],
+      "ASI10:2026": [
+        "021"
+      ]
+    }
+  }
+}

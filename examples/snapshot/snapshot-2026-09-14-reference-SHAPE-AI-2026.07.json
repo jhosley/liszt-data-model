@@ -1,0 +1,163 @@
+{
+  "snapshot_id": "2026-09-14-reference-SHAPE-AI-2026.07",
+  "generated": "2026-09-14",
+  "generated_by": {
+    "tool": "tools/coverage.py",
+    "repo_commit": "9ac04890e6f67e5c2d1a17c5bdb7fb3aeee724ad",
+    "dirty": true
+  },
+  "org": "reference",
+  "shape": "SHAPE-AI",
+  "baseline": "2026.07",
+  "frameworks": {
+    "tuple_source": "pinned-artifacts",
+    "attack": {
+      "version": "19.1",
+      "spec_version": "3.3.0",
+      "pinned_artifact": "enterprise-attack/enterprise-attack-19.1.json",
+      "sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3"
+    },
+    "atlas": {
+      "content_version": "2026.07",
+      "format_version": "6.0.0",
+      "pinned_artifact": "dist/v6/ATLAS-2026.07.yaml",
+      "sha256": "0e07bb07fc6423d72cdf24ddc2038a6905bcbc00ba571064153119ee1a5888d4"
+    },
+    "owasp_llm": {
+      "edition": "2025",
+      "sha256": "d8596f2c6b3384081574d392619ee3e9065c4f86e5b1fed1bb56be78de2ce382"
+    },
+    "owasp_agentic": {
+      "edition": "2026",
+      "sha256": null
+    },
+    "dettect": {
+      "version": "2.2.0",
+      "targets_attack": "18"
+    }
+  },
+  "library": {
+    "scenarios_total": 1,
+    "by_status": {
+      "published": 1
+    },
+    "published_ids": [
+      "021"
+    ],
+    "includes_drafts": false,
+    "retired_this_period": [],
+    "ids_added_this_period": [],
+    "ids_rescored_this_period": []
+  },
+  "metrics": {
+    "coverage": {
+      "have": 0.5,
+      "collectable": 0.333,
+      "blind": 0.167,
+      "completeness": 1.0,
+      "rows_scored": 6,
+      "rows_total": 6
+    },
+    "exposure": {
+      "now_total": 1,
+      "now_exposed": 1,
+      "exposure_rate": 1.0,
+      "orphaned_steps": 0,
+      "unfunded_steps": 0
+    },
+    "maturity": {
+      "mean": 1.0,
+      "eligible": 1,
+      "assessed": 1.0,
+      "gates": {
+        "M1": 1.0,
+        "M2": 1.0,
+        "M3": 1.0,
+        "M4": 1.0,
+        "M5": 1.0,
+        "M6": 1.0,
+        "M7": 1.0
+      }
+    }
+  },
+  "scenarios": [
+    {
+      "id": "021",
+      "title": "Agent sandbox escape \u2192 autonomous intrusion",
+      "status": "published",
+      "mode": "attack",
+      "priority": "NOW",
+      "evidence": "seen-in-the-wild",
+      "rows": 6,
+      "scored": 6,
+      "proposed": 0,
+      "proposed_steps": [],
+      "completeness": 1.0,
+      "have": 0.5,
+      "collectable": 0.333,
+      "blind": 0.167,
+      "quality": 0.527,
+      "counts": {
+        "Have": 3,
+        "Collectable": 2,
+        "Blind": 1
+      },
+      "blind_steps": [
+        1
+      ],
+      "earliest_blind_step": 1,
+      "forensics_only_steps": [
+        3,
+        5
+      ],
+      "exposed": true,
+      "orphaned_gaps": [],
+      "unfunded_gaps": [],
+      "maturity": {
+        "M1_reviewed": true,
+        "M2_scored_in_depth": true,
+        "M3_evidenced": true,
+        "M4_owned": true,
+        "M5_closed_loop": true,
+        "M6_remediable": true,
+        "M7_sourced": true,
+        "eligible": true,
+        "score": "7/7"
+      },
+      "row_coverage": [
+        {
+          "step": 1,
+          "coverage": "Blind",
+          "backlog_ref": "OBS-1041"
+        },
+        {
+          "step": 2,
+          "coverage": "Have",
+          "backlog_ref": null
+        },
+        {
+          "step": 3,
+          "coverage": "Collectable",
+          "backlog_ref": "OBS-1042"
+        },
+        {
+          "step": 4,
+          "coverage": "Have",
+          "backlog_ref": null
+        },
+        {
+          "step": 5,
+          "coverage": "Collectable",
+          "backlog_ref": "OBS-1043"
+        },
+        {
+          "step": 6,
+          "coverage": "Have",
+          "backlog_ref": null
+        }
+      ]
+    }
+  ],
+  "gaming": [],
+  "non_comparable_with": []
+}

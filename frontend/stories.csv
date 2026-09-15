@@ -1,0 +1,69 @@
+Summary,Description,Epic,Screen,Acceptance Criteria
+S01 Scenario: to browse the scenario list with filters,"As a reader, I want to browse the scenario list with filters, so that I can find a scenario by id, title, priority, evidence tier, layer, status, coverage or testability.",Tier 1: Read the library,Scenario,"Given filters, when combined, then they apply with AND and the count reads n of total
+Given no match, when the list renders, then it reads 'No scenario matches these filters.'
+Given a card, when it renders, then it shows id, priority, evidence tier, title, verdict bar, layer, step count and Have share or 'not scored'"
+S02 Scenario: to read a scenario end to end,"As a reader, I want to read a scenario end to end, so that I understand what happens, what we would see, and what we would not.",Tier 1: Read the library,Scenario,"Given scenario 021, when the record renders, then every section in screens/scenario.md section 4 is present with the example values
+Given scaled_up, when it renders, then it is prefixed 'Hypothetical, not observed.'
+Given mapping_confidence editorial, when the mapping renders, then the caveat box with the notes is shown"
+S03 Scenario: to see each evidence row's verdict with its scores,"As a reader, I want to see each evidence row's verdict with its scores, so that I can tell Have from Collectable from Blind from Unscored at a glance.",Tier 1: Read the library,Scenario,"Given a row with no scores, when it renders, then it reads Unscored and 'not scored'
+Given any verdict chip, when it renders, then the word is next to the color
+Given a row with visibility 0, when it renders, then the chip reads Blind"
+"S04 Every screen: to always see the organization, the shape and whether drafts are included","As a reader, I want to always see the organization, the shape and whether drafts are included, so that I never act on a figure that is not what I think it is.",Tier 1: Read the library,Every screen,"Given any screen with a figure, when it renders, then organization, shape and drafts flag are in the header"
+S05 Coverage: to see coverage per scenario and in aggregate with completeness beside every figure,"As a detection engineer, I want to see coverage per scenario and in aggregate with completeness beside every figure, so that I know what is measured and what is not.",Tier 1: Read the library,Coverage,"Given an unscored scenario, when the list renders, then its share reads n/a and it is absent from the mean
+Given any percentage, when it renders, then scored of rows is beside it
+Given mean_have null, when the tile renders, then it reads 'nothing scored yet'"
+S06 Coverage: to see which NOW scenarios have a Blind step and which gaps have no owner,"As a risk reader, I want to see which NOW scenarios have a Blind step and which gaps have no owner, so that I know the exposure and the escalation list.",Tier 1: Read the library,Coverage,"Given metrics.exposed, when the panel renders, then the scenario and its blind steps are listed
+Given no exposed scenario, when it renders, then the empty state text is shown"
+"S07 Use cases: to read a use case with its status, autonomy and limits visible","As a reader, I want to read a use case with its status, autonomy and limits visible, so that I do not over trust a plan or an automation.",Tier 1: Read the library,Use cases,"Given any use case, when it renders, then status, autonomy and limits are visible
+Given autonomy above notify, when it renders, then the promotion section is shown
+Given an illustrative record, when it renders, then the banner is shown"
+"S08 Frameworks: to see every identifier the library uses, its baseline, and which scenarios use it","As an analyst, I want to see every identifier the library uses, its baseline, and which scenarios use it, so that I map to identifiers that exist and see where they are used.",Tier 1: Read the library,Frameworks,"Given the page, when it renders, then the baseline versions are shown and the reliability note is present
+Given a revoked identifier, when it renders, then it is marked and its replacement named"
+S09 Documentation: to read the layer cards and the environment shapes from records,"As a reader, I want to read the layer cards and the environment shapes from records, so that the page cannot drift from the library.",Tier 1: Read the library,Documentation,"Given the AI stack shape, when Environments renders, then five layer cards show its text
+Given a layer page, when it renders, then its identifiers and scenarios come from the records
+Given a proposed shape, when it renders, then it is marked proposed"
+"S10 Reports: to see posture, scoreboard and movement from snapshots","As leadership, I want to see posture, scoreboard and movement from snapshots, so that I see where the program stands and whether movement was real.",Tier 1: Read the library,Reports,"Given a snapshot, when posture renders, then organization, shape, baseline and snapshot id are visible
+Given rescores in the period, when movement renders, then they are listed separately from improvements
+Given no snapshot, when the screen renders, then it says so and shows no figures"
+S11 Scenario: to switch a scenario into Edit mode without starting a session,"As an analyst, I want to switch a scenario into Edit mode without starting a session, so that I can fix a record at my desk.",Tier 2: Change a record,Scenario,"Given a signed in person, when Edit is pressed, then authored and assessment fields become editable
+Given Edit mode, when derived fields render, then each is marked derived and has no control
+Given Discard with unsaved edits, when pressed, then a confirmation is asked and edits are dropped"
+S12 Scenario: to save my edits as one change set with a reason,"As an analyst, I want to save my edits as one change set with a reason, so that every change is attributed and validated.",Tier 2: Change a record,Scenario,"Given Save, when pressed, then the dialog asks for reason and a conditional ticket
+Given a refused change set, when the response arrives, then every finding is shown next to its field and edits are kept
+Given a successful save, when the response arrives, then the record shown is the server's version"
+S13 Scenario: to be stopped from rescoring without a ticket,"As an analyst, I want to be stopped from rescoring without a ticket, so that rescores stay visible as rescores.",Tier 2: Change a record,Scenario,"Given a changed score on an already scored row and no ticket, when Save is submitted, then the dialog refuses with 'a score change without a ticket is a rescore'"
+S14 Scenario: to publish a scenario I did not write,"As a reviewer, I want to publish a scenario I did not write, so that the independent review rule holds.",Tier 2: Change a record,Scenario,"Given Publish with reviewer equal to author, when submitted, then the server refuses and the message is shown
+Given a record with a remaining warning, when Publish is submitted, then it is refused with the warning listed"
+S15 Scenario: to see a conflict when the record changed under me,"As an analyst, I want to see a conflict when the record changed under me, so that I do not overwrite someone else's work.",Tier 2: Change a record,Scenario,"Given a stale base_version, when Save is submitted, then the server refuses, the record reloads, and my edits stay in the cards"
+S16 Session: to run a scoring session with my name on everything captured,"As a facilitator, I want to run a scoring session with my name on everything captured, so that the room's answers are attributed and read back.",Tier 2: Change a record,Session,"Given a session, when started, then the facilitator name is required and shown in the bar
+Given half a score pair, when a row renders, then it stays Unscored with the picked value shown
+Given the readback, when it renders, then every captured change is listed per scenario and step"
+S17 Session: to score as a map and in tabletop mode,"As a facilitator, I want to score as a map and in tabletop mode, so that a room can follow the questions on a projector.",Tier 2: Change a record,Session,"Given the map's no path, when taken, then visibility 0 and detection -1 commit together
+Given tabletop mode, when active, then arrow keys move focus and Esc exits
+Given cards and map, when the same answers are given, then the capture is identical"
+S18 Session: to submit the session or export it for later,"As a facilitator, I want to submit the session or export it for later, so that a room with no connection still gets its work applied.",Tier 2: Change a record,Session,"Given Submit, when the server answers, then findings show per scenario and nothing is marked applied until it says so
+Given Export, when pressed, then a session file in session_format 1 is produced"
+S19 Use cases: to edit a use case and add a new one,"As a detection engineer, I want to edit a use case and add a new one, so that use cases move through their phases and statuses.",Tier 2: Change a record,Use cases,"Given autonomy set above notify with no promotion, when saved, then the server refuses
+Given covers with a step the scenario lacks, when saved, then the server refuses naming the step
+Given Add, when the required fields are filled, then a proposed use case is created with the next id"
+S20 Bring in a scenario: to convert a model's answer into a checked draft,"As an analyst, I want to convert a model's answer into a checked draft, so that a new scenario lands with its problems flagged, not hidden.",Tier 2: Change a record,Bring in a scenario,"Given a canonical layer string in a step tag, when checked, then it is shortened and flagged
+Given seven steps, when checked, then the extra is dropped loudly and the rest renumbered
+Given an unreadable source tier, when checked, then it lands as '2' with a review note"
+S21 Scenario management: to see readiness for every scenario with blockers verbatim,"As a detection engineer, I want to see readiness for every scenario with blockers verbatim, so that I know what can be tested today and what is missing.",Tier 3: Test and calibrate,Scenario management,"Given a blocked scenario, when readiness renders, then every blocker string is shown word for word
+Given the filter ready, when applied, then only scenarios with no blockers on the scoring path are listed"
+S22 Scenario management: to read a run's scorecard,"As a detection engineer, I want to read a run's scorecard, so that I know whether the library describes the estate or our optimism.",Tier 3: Test and calibrate,Scenario management,"Given RUN-021 examples, when the scorecard renders, then rows, totals, by class and caveats match
+Given a scratch pipeline, when it renders, then Have and Collectable rows read unscoreable with the note
+Given a triggered stop condition, when it renders, then it reads as a successful guardrail"
+S23 Scenario management: to accept or reject a proposed rescore,"As a detection engineer, I want to accept or reject a proposed rescore, so that the library learns from runs without anything writing itself back.",Tier 3: Test and calibrate,Scenario management,"Given Accept, when submitted, then the change carries the run id as ticket and the row updates only after the server applies it
+Given Reject, when submitted, then the proposal is marked rejected with the reason"
+S24 Import: to hand over one run document per scenario per run,"As the agentic platform, I want to hand over one run document per scenario per run, so that runs land as immutable records.",Tier 3: Test and calibrate,Import,"Given a valid import, when posted, then one run record is created and nothing else
+Given a moved prediction digest, when posted, then it is refused with the digest message
+Given an unknown environment, when posted, then it is refused"
+S25 Scenario: to set an agent proposed score to human after reviewing the evidence,"As a detection engineer, I want to set an agent proposed score to human after reviewing the evidence, so that proposals become measurements only by a person's act.",Tier 3: Test and calibrate,Scenario,"Given a row marked agent-proposed, when Edit sets provenance to human-session and saves with a reason, then the row counts in coverage afterwards
+Given agent-proposed rows, when Publish is attempted, then it is refused"
+S26 Administration: to define an environment and version it,"As an administrator, I want to define an environment and version it, so that runs cite an environment that cannot change under them.",Tier 4: Administer,Administration,"Given an edit to an environment, when saved, then a new version is created and the old one is unchanged
+Given a delete of a cited environment, when attempted, then it is refused"
+S27 Administration: to maintain infrastructure shapes,"As an administrator, I want to maintain infrastructure shapes, so that the layer cards, seams and categories are records.",Tier 4: Administer,Administration,"Given the catalog shape, when Edit is on, then its layers have no control
+Given a proposed shape, when edited and saved, then it validates against the shape schema"
+S28 Administration: to see the baseline's owner and pin status,"As an administrator, I want to see the baseline's owner and pin status, so that the first migration can be planned.",Tier 4: Administer,Administration,"Given owner UNASSIGNED, when the panel renders, then a warning says the migration cannot happen until someone is named
+Given the checksum lock, when the panel renders, then each artifact shows vendored or missing"
