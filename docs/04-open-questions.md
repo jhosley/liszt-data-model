@@ -16,7 +16,8 @@ decides it, so they are listed here to be decided rather than defaulted.
 5. **`source` is organization scoped.** One estate runs one product and another runs a different one. The full per organization field list is stated once in the overlay schema.
 6. **Scenario 021 carries an illustrative reference assessment.** Restored so that one record exercises every path, and labeled as invented in the record itself.
 7. **No cross shape figure is reported.** Every scenario names its infrastructure shape, a snapshot reports one organization and one shape, and coverage, exposure and maturity are never blended across shapes. Comparison across shapes is a table of per shape snapshots side by side. Decided 2026-09-14.
-8. **Infrastructure is reference data.** The layers, seams and emitted categories of each kind of estate are records under `infrastructure/`, with the AI stack as the catalog's shape and six further shapes carried as proposed. A scenario names its shape, which is the stack scope column. The viewer reads the records rather than carrying its own copy.
+8. **PostgreSQL is the store.** Decided 2026-09-16 after a MongoDB comparison. The rules that make the numbers trustworthy, a generated coverage tag, foreign keys into the pinned baseline, the reviewer not equal to the author, are enforced by the database rather than by whichever code path last wrote a record. JSON columns are used where a record is naturally a bundle, such as a run's observations or a spec's procedure.
+9. **Infrastructure is reference data.** The layers, seams and emitted categories of each kind of estate are records under `infrastructure/`, with the AI stack as the catalog's shape and six further shapes carried as proposed. A scenario names its shape, which is the stack scope column. The viewer reads the records rather than carrying its own copy.
 
 ## 2. Decisions still open
 
